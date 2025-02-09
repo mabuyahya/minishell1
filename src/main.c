@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/09 18:49:08 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/09 19:03:44 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!check_args(out, &prompt))
 			break;
 	}
-	ft_free_matrix(&p->envp);
+	ft_free_matrix(&prompt.envp);
 	clear_history();
 	return (g_status);
 }
