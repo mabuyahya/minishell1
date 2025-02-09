@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/09 15:25:07 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/09 18:49:02 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	*check_args(char *out, t_prompt *p)
 	// if (p && p->cmds)
 	// 	n = p->cmds->content;
 	// if (p && p->cmds && n && n->full_cmd && ft_lstsize(p->cmds) == 1)
-	// 	p->envp = mini_setenv("_", n->full_cmd[ft_matrixlen(n->full_cmd) - 1], \
+	// 	p->envp = mini_setenv("_", n->full_cmd[ft_matrixlen(n->full_cmd) - 1],
 	// 		p->envp, 1);
 	if (p && p->cmds)
 		ft_lstclear(&p->cmds, free_content);

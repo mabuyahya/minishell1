@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_dup_matrix.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aperez-b <aperez-b@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/06 19:54:58 by aperez-b          #+#    #+#             */
-/*   Updated: 2021/10/22 17:05:04 by aperez-b         ###   ########.fr       */
+/*   Updated: 2025/02/09 17:59:30 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/libft.h"
 
 char	**ft_dup_matrix(char **m)
+// duplicate double pointer.
 {
 	char	**out;
 	int		n_rows;

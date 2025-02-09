@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cmdtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/08 14:27:03 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/09 18:35:08 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,5 @@ char	**ft_cmdtrim(const char *s, char *delims)
 	arr = malloc((words + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
-
 	return (ft_fill_array(arr, s, delims));
 }
