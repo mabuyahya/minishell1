@@ -6,11 +6,11 @@
 /*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 15:51:24 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/09 15:16:29 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:42:50 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 static char	*find_command(char **env_path, char *cmd, char *full_path)
 {

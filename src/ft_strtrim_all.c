@@ -6,11 +6,11 @@
 /*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 20:59:58 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/08 15:03:33 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:42:50 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 static int	malloc_len(char const *s1)
 {

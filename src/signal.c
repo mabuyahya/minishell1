@@ -6,11 +6,11 @@
 /*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 15:44:53 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/08 14:16:02 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:42:54 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 int	g_status;
 

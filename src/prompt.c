@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aperez-b <aperez-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/10 17:02:33 by aperez-b          #+#    #+#             */
-/*   Updated: 2022/03/14 16:19:23 by aperez-b         ###   ########.fr       */
+/*   Created: 2025/02/10 18:39:11 by mabuyahy          #+#    #+#             */
+/*   Updated: 2025/02/10 18:39:23 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 extern int	g_status;
 

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cmdsubsplit.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aperez-b <aperez-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 18:23:56 by aperez-b          #+#    #+#             */
-/*   Updated: 2022/03/08 12:39:24 by aperez-b         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:42:49 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 static int	ft_count_words(char *s, char *set, int count)
 {

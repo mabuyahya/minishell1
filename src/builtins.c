@@ -5,12 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/09 15:04:56 by mabuyahy         ###   ########.fr       */
+/*   Created: 2025/02/10 18:38:46 by mabuyahy          #+#    #+#             */
+/*   Updated: 2025/02/10 18:38:47 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+
+#include "minishell.h"
 
 extern int	g_status;
 

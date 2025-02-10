@@ -6,11 +6,11 @@
 /*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/08 14:33:06 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:42:48 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 extern int	g_status;
 
@@ -79,7 +79,7 @@ char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt)
 		quotes[1] = (quotes[1] + (!quotes[0] && str[i] == '\"')) % 2;
 		if (!quotes[0] && str[i] == '$' && str[i + 1] && \
 			((ft_strchars_i(&str[i + 1], "/~%^{}:; ") && !quotes[1]) || \
-			(ft_strchars_i(&str[i + 1], "/~%^{}:;\"") && quotes[1])))
+			(ft_strchars_i(&str[i + 1], "/~%^{}:;\"minishell.h") && quotes[1])))
 			return (expand_vars(get_substr_var(str, ++i, prompt), -1, \
 				quotes, prompt));
 	}
