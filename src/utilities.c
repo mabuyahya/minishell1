@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:41:00 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/10 16:25:43 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:49:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int	ft_countchar(char *s, char c)
 	}
 	return (count);
 }
+
 int	ft_strchr_i(const char *s, int c)
+// take one string with char.
 {
 	unsigned char	c_unsigned;
 	int				i;
@@ -46,7 +48,9 @@ int	ft_strchr_i(const char *s, int c)
 		return (i);
 	return (-1);
 }
+
 int	ft_strchars_i(const char *s, char *set)
+// take two string.
 {
 	int				i;
 
@@ -61,6 +65,7 @@ int	ft_strchars_i(const char *s, char *set)
 	}
 	return (-1);
 }
+
 int	ft_isspace(char c)
 {
 	return ((c >= 9 && c <= 13) || c == ' ');

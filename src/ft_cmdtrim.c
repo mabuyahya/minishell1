@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cmdtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:49 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,19 @@
 
 static int	ft_count_words(const char *s, char *delims)
 {
-	int	count = 0;
-	int	i = 0;
-	char	quote = 0;
+	int		count;
+	int		i;
+	char	quote;
 
+	i = 0;
+	count = 0;
+	quote = 0;
 	while (s[i])
 	{
 		while (s[i] && ft_strchr(delims, s[i]))
 			i++; // Skip delimiters
-
 		if (s[i])
 			count++;
-
 		while (s[i] && (!ft_strchr(delims, s[i]) || quote))
 		{
 			if (!quote && (s[i] == '\'' || s[i] == '\"'))
@@ -38,21 +39,25 @@ static int	ft_count_words(const char *s, char *delims)
 			i++;
 		}
 	}
-	return (quote ? -1 : count);
+	if (quote)
+	    return (-1);
+	return count;
 }
 
 static char	**ft_fill_array(char **arr, const char *s, char *delims)
 {
-	int		i = 0, start, word = 0;
+	int		i;
+	int		start;
+	int		word;
 	char	quote = 0;
 
+	i = 0;
+	word = 0;
 	while (s[i])
 	{
 		while (s[i] && ft_strchr(delims, s[i]))
 			i++; // Skip delimiters
-
 		start = i;
-
 		while (s[i] && (!ft_strchr(delims, s[i]) || quote))
 		{
 			if (!quote && (s[i] == '\'' || s[i] == '\"'))
@@ -61,7 +66,6 @@ static char	**ft_fill_array(char **arr, const char *s, char *delims)
 				quote = 0;
 			i++;
 		}
-
 		if (start < i)
 			arr[word++] = ft_substr(s, start, i - start);
 	}
@@ -70,7 +74,7 @@ static char	**ft_fill_array(char **arr, const char *s, char *delims)
 }
 
 char	**ft_cmdtrim(const char *s, char *delims)
-// split the command the user enter it bu spaces and ' and ".
+// split the command by spaces and ' and ".
 {
 	char	**arr;
 	int		words;

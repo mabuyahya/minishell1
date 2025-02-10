@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cmdsubsplit.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 18:23:56 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:49 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
 }
 
 char	**ft_cmdsubsplit(char const *s, char *set)
+// split the string in < > and |.
 {
 	char	**aux;
 	int		nwords;

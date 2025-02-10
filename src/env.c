@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/09 17:28:02 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:46 by mabuyahy         ###   ########.fr       */
+/*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/10 19:09:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,15 @@ char	*mini_getenv(char *var, char **envp, int n)
 	return (NULL);
 }
 
+// char	**return_and_free(char **envp, int i, char *new_entry)
+// {
+// 	free(envp[i]);
+// 	envp[i] = new_entry;
+// 	return (envp);
+// }
 
 char	**mini_setenv(char *var, char *value, char **envp, int n)
+// add to env if not exist, if exist edit it.
 {
 	int		i;
 	char	*new_entry;
@@ -55,11 +62,11 @@ char	**mini_setenv(char *var, char *value, char **envp, int n)
 	    equal_pos = ft_strchr(envp[i], '=');
 	    if (equal_pos && !ft_strncmp(envp[i], var, equal_pos - envp[i]))
 	    {
-	        free(envp[i]);
-	        envp[i] = new_entry;
-	        return (envp);
-	    }
-	    i++;
+			free(envp[i]);
+			envp[i] = new_entry;
+			return (envp);
+		}
+		i++;
 	}
 	envp = ft_extend_matrix(envp, new_entry);
 	free(new_entry);

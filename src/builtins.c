@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 18:38:46 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/10 18:38:47 by mabuyahy         ###   ########.fr       */
+/*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
 extern int	g_status;
 
 int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, int n)
+// execute command, and check if the command built in.
 {
 	char	**a;
 
@@ -45,6 +45,7 @@ int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, int n)
 }
 
 int	is_builtin(t_mini *n)
+// check if the command built in or not.
 {
 	int		l;
 
@@ -72,6 +73,7 @@ int	is_builtin(t_mini *n)
 }
 
 int	mini_cd(t_prompt *p)
+// handle the command cd.
 {
 	char	**str[2];
 	char	*aux;
@@ -100,6 +102,7 @@ int	mini_cd(t_prompt *p)
 }
 
 int	mini_pwd(void)
+// handle pwd.
 {
 	char	*buf;
 
@@ -110,6 +113,7 @@ int	mini_pwd(void)
 }
 
 int	mini_echo(t_list *cmd)
+// handle echo.
 {
 	int		newline;
 	int		i[2];

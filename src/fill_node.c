@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_node.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 17:05:01 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:48 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static t_mini	*mini_init(void)
 }
 
 static t_mini	*get_params(t_mini *node, char **a[2], int *i)
+// put infile and outfile for every command.
+// put the command in the content of the node.
 // a[0] : with single and double quotes.
 // a[1] = without single and double quotes.
 {
@@ -82,15 +84,18 @@ static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
 }
 
 t_list	*fill_nodes(char **args, int i)
+ // cmd[0] = pointer to the first | cmd[1] = pointer to the last.
+ // fill node, put the command inside the content of the node.
+ // every command have the input and output and the path of the command. 
 {
 	t_list	*cmds[2];
 	char	**temp[2];
 
 	cmds[0] = NULL;
-	temp[1] = get_trimmed(args); // delete single and double quotes.
+	temp[1] = get_trimmed(args);
 	while (args[++i])
 	{
-		cmds[1] = ft_lstlast(cmds[0]); // cmd[0] = pointer to the first | cmd[1] = pointer to the last.
+		cmds[1] = ft_lstlast(cmds[0]);
 		if (i == 0 || (args[i][0] == '|' && args[i + 1] && args[i + 1][0]))
 		{
 			if (args[i][0] == '|')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:52 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 19:26:24 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 extern int	g_status;
 
 static void	mini_getpid(t_prompt *p)
+// get process id to handle $$.
+// get parant pid.  = (child - 1).
 {
 	pid_t	pid;
 
@@ -31,13 +33,16 @@ static void	mini_getpid(t_prompt *p)
 		exit(1);
 	}
 	waitpid(pid, NULL, 0);
-	p->pid = pid - 1; // get parant pid.  = (child - 1)
+	p->pid = pid - 1;
 }
 
 static t_prompt	init_vars(t_prompt prompt, char *str, char **argv)
+// init variables and get the path of the minishell.
+// SHILVL : how much shell open.
 {
 	char	*num;
 
+	(void)(argv);
 	str = getcwd(NULL, 0); // the path of the minishell.
 	prompt.envp = mini_setenv("PWD", str, prompt.envp, 3);
 	free(str);
@@ -51,7 +56,7 @@ static t_prompt	init_vars(t_prompt prompt, char *str, char **argv)
 	free(num);
 	str = mini_getenv("PATH", prompt.envp, 4);
 	if (!str)
-		prompt.envp = mini_setenv("PATH", \
+		prompt.envp = mini_setenv("PATH", 
 		"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin", prompt.envp, 4);
 	free(str);
 	str = mini_getenv("_", prompt.envp, 1);
@@ -62,6 +67,7 @@ static t_prompt	init_vars(t_prompt prompt, char *str, char **argv)
 }
 
 static t_prompt	init_prompt(char **argv, char **envp)
+// init env and all the struct.
 {
 	t_prompt	prompt;
 	char		*str;
@@ -93,9 +99,12 @@ int	main(int argc, char **argv, char **envp)
 			out = readline("guest@minishell $ ");
 		free(str);
 		if (!check_args(out, &prompt))
+		{
+			ft_free_matrix(&prompt.envp);
 			break;
+		}
+		ft_free_matrix(&prompt.envp);
 	}
-	ft_free_matrix(&prompt.envp);
 	clear_history();
 	return (g_status);
 }

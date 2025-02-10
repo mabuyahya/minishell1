@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:48 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,29 @@
 extern int	g_status;
 
 char	*expand_path(char *str, int i, int quotes[2], char *var)
+// to handle ~ and $.
 {
-	char	*path;
+	char	*new_str;
 	char	*aux;
 
 	quotes[0] = 0;
 	quotes[1] = 0;
 	while (str && str[++i])
 	{
-		quotes[0] = (quotes[0] + (!quotes[1] && str[i] == '\'')) % 2;
-		quotes[1] = (quotes[1] + (!quotes[0] && str[i] == '\"')) % 2;
-		if (!quotes[0] && !quotes[1] && str[i] == '~' && (i == 0 || \
-			str[i - 1] != '$'))
+		if (str[i] == '\'' && !quotes[1])
+			quotes[0] = !quotes[0];
+		else if (str[i] == '\"' && !quotes[0])
+			quotes[1] = !quotes[1];
+		if (!quotes[0] && !quotes[1] && str[i] == '~' && (i == 0 || str[i - 1] != '$'))
 		{
 			aux = ft_substr(str, 0, i);
-			path = ft_strjoin(aux, var);
+			new_str = ft_strjoin(aux, var);
 			free(aux);
-			aux = ft_substr(str, i + 1, ft_strlen(str));
+			aux = ft_strjoin(new_str, str + i + 1);
+			free(new_str);
 			free(str);
-			str = ft_strjoin(path, aux);
-			free(aux);
-			free(path);
-			return (expand_path(str, i + ft_strlen(var) - 1, quotes, var));
+			str = aux;
+			i += ft_strlen(var) - 1;
 		}
 	}
 	free(var);
@@ -70,18 +71,23 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt)
 }
 
 char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt)
+// expand commands.
 {
 	quotes[0] = 0;
 	quotes[1] = 0;
 	while (str && str[++i])
 	{
-		quotes[0] = (quotes[0] + (!quotes[1] && str[i] == '\'')) % 2;
-		quotes[1] = (quotes[1] + (!quotes[0] && str[i] == '\"')) % 2;
-		if (!quotes[0] && str[i] == '$' && str[i + 1] && \
-			((ft_strchars_i(&str[i + 1], "/~%^{}:; ") && !quotes[1]) || \
-			(ft_strchars_i(&str[i + 1], "/~%^{}:;\"minishell.h") && quotes[1])))
-			return (expand_vars(get_substr_var(str, ++i, prompt), -1, \
-				quotes, prompt));
+		if (str[i] == '\'' && !quotes[1])
+			quotes[0] = !quotes[0];
+		else if (str[i] == '\"' && !quotes[0])
+			quotes[1] = !quotes[1];
+
+		if (!quotes[0] && str[i] == '$' && str[i + 1] && 
+			ft_strchars_i(&str[i + 1], "/~%^{}:; ") && (!quotes[1] || str[i + 1] != '\"'))
+		{
+			str = get_substr_var(str, ++i, prompt);
+			i = -1;
+		}
 	}
 	return (str);
 }

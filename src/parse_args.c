@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:52 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 extern int	g_status;
 
 static char	**split_all(char **args, t_prompt *prompt)
+// remove and handle single double quotes and $ ~.
 {
 	char	**subsplit;
 	int		i;
@@ -24,17 +25,18 @@ static char	**split_all(char **args, t_prompt *prompt)
 	while (args && args[++i])
 	{
 		args[i] = expand_vars(args[i], -1, quotes, prompt);
-		args[i] = expand_path(args[i], -1, quotes, \
+		args[i] = expand_path(args[i], -1, quotes,
 			mini_getenv("HOME", prompt->envp, 4));
 		subsplit = ft_cmdsubsplit(args[i], "<|>");
 		ft_matrix_replace_in(&args, subsplit, i);
-		i += ft_matrixlen(subsplit) - 1;
+		i = i + ft_matrixlen(subsplit) - 1;
 		ft_free_matrix(&subsplit);
 	}
 	return (args);
 }
 
 static void	*parse_args(char **args, t_prompt *p)
+// waitpid(-1, NULL, NULL) : to wait any chiled process.
 {
 	int	is_exit;
 	int	i;
@@ -46,7 +48,7 @@ static void	*parse_args(char **args, t_prompt *p)
 	i = ft_lstsize(p->cmds);
 	g_status = builtin(p, p->cmds, &is_exit, 0);
 	while (i-- > 0)
-		waitpid(-1, &g_status, 0); // -1 to wait any chiled process.
+		waitpid(-1, &g_status, 0);
 	if (!is_exit && g_status == 13)
 		g_status = 0;
 	if (g_status > 255)
@@ -60,9 +62,10 @@ static void	*parse_args(char **args, t_prompt *p)
 }
 
 void	*check_args(char *out, t_prompt *p)
+// all solution.
 {
 	char	**a;
-	// t_mini	*n;
+	t_mini	*n;
 
 	if (!out)
 	{
@@ -71,18 +74,18 @@ void	*check_args(char *out, t_prompt *p)
 	}
 	if (out[0] != '\0')
 		add_history(out);
-	a = ft_cmdtrim(out, " "); // split for space and ' ".
+	a = ft_cmdtrim(out, " ");
 	free(out);
 	if (!a)
 		mini_perror(QUOTE, NULL, 1);
 	if (!a)
 		return ("");
 	p = parse_args(a, p);
-	// if (p && p->cmds)
-	// 	n = p->cmds->content;
-	// if (p && p->cmds && n && n->full_cmd && ft_lstsize(p->cmds) == 1)
-	// 	p->envp = mini_setenv("_", n->full_cmd[ft_matrixlen(n->full_cmd) - 1],
-	// 		p->envp, 1);
+	if (p && p->cmds)
+		n = p->cmds->content;
+	if (p && p->cmds && n && n->full_cmd && ft_lstsize(p->cmds) == 1)
+		p->envp = mini_setenv("_", n->full_cmd[ft_matrixlen(n->full_cmd) - 1],
+			p->envp, 1);
 	if (p && p->cmds)
 		ft_lstclear(&p->cmds, free_content);
 	return (p);

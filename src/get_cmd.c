@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 15:51:24 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:50 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static char	*find_command(char **env_path, char *cmd, char *full_path)
+// find the file of the command in a PATH.
 {
 	char	*temp;
 	int		i;
@@ -41,6 +42,8 @@ static char	*find_command(char **env_path, char *cmd, char *full_path)
 }
 
 static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
+// if the argument is directory.
+// if the command like this : /bin/ls, or ./minishell.
 {
 	t_mini	*n;
 	DIR		*dir;
@@ -48,8 +51,8 @@ static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
 	dir = NULL;
 	n = cmd->content;
 	if (n && n->full_cmd)
-		dir = opendir(*n->full_cmd); // if the argument is directory.
-	if (n && n->full_cmd && ft_strchr(*n->full_cmd, '/') && !dir) // if the command like this : /bin/ls, or ./minishell.
+		dir = opendir(*n->full_cmd);
+	if (n && n->full_cmd && ft_strchr(*n->full_cmd, '/') && !dir)
 	{
 		*s = ft_split(*n->full_cmd, '/');
 		n->full_path = ft_strdup(*n->full_cmd);
@@ -80,7 +83,7 @@ void	get_cmd(t_prompt *prompt, t_list *cmd, char **s, char *path)
 	else if (!is_builtin(n) && n && n->full_path && \
 		access(n->full_path, F_OK) == -1)
 		mini_perror(NDIR, n->full_path, 127);
-	else if (!is_builtin(n) && n && n->full_path && \
+	else if (!is_builtin(n) && n && n->full_path &&
 		access(n->full_path, X_OK) == -1)
 		mini_perror(NPERM, n->full_path, 126);
 	if (dir)
@@ -89,6 +92,7 @@ void	get_cmd(t_prompt *prompt, t_list *cmd, char **s, char *path)
 }
 
 void	*exec_cmd(t_prompt *prompt, t_list *cmd)
+// execute the command, if the command does not built in.
 {
 	int		pipe_fd[2];
 
@@ -99,7 +103,7 @@ void	*exec_cmd(t_prompt *prompt, t_list *cmd)
 		return (NULL);
 	close(pipe_fd[WRITE_END]);
 	if (cmd->next && !((t_mini *)cmd->next->content)->infile)
-		((t_mini *)cmd->next->content)->infile = pipe_fd[READ_END]; // if no in_file put in_file to pipe.
+		((t_mini *)cmd->next->content)->infile = pipe_fd[READ_END];
 	else
 		close(pipe_fd[READ_END]);
 	if (((t_mini *)cmd->content)->infile > 2)

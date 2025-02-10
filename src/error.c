@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 11:36:47 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:46 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 extern int	g_status;
 
 void	*mini_perror(int err_type, char *param, int err)
+// print error if exist.
 {
 	g_status = err;
 	if (err_type == QUOTE)
@@ -69,6 +70,7 @@ int	ft_atoi2(const char *nptr, long *nbr)
 }
 
 int	mini_exit(t_list *cmd, int *is_exit)
+// handle the command exit.
 {
 	t_mini	*node;
 	long	status[2];
@@ -98,6 +100,7 @@ int	mini_exit(t_list *cmd, int *is_exit)
 }
 
 void	cd_error(char **str[2])
+// handle cd.
 {
 	DIR		*dir;
 
@@ -122,6 +125,7 @@ void	cd_error(char **str[2])
 }
 
 void	free_content(void *content)
+// free the content of the node(full_cmd, full_path).
 {
 	t_mini	*node;
 

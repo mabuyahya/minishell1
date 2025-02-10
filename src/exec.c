@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 18:49:29 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 11:42:47 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 extern int	g_status;
 
 void	child_builtin(t_prompt *prompt, t_mini *n, int l, t_list *cmd)
+// execute the command and check the command.
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -35,6 +36,7 @@ void	child_builtin(t_prompt *prompt, t_mini *n, int l, t_list *cmd)
 }
 
 static void	*child_redir(t_list *cmd, int fd[2])
+// redirection the command to input and output file or pipe.
 {
 	t_mini	*node;
 
@@ -58,6 +60,7 @@ static void	*child_redir(t_list *cmd, int fd[2])
 }
 
 void	*child_process(t_prompt *prompt, t_list *cmd, int fd[2])
+// after make fork this is chiled process.
 {
 	t_mini	*n;
 	int		l;
@@ -74,6 +77,7 @@ void	*child_process(t_prompt *prompt, t_list *cmd, int fd[2])
 }
 
 void	exec_fork(t_prompt *prompt, t_list *cmd, int fd[2])
+// make chiled process.
 {
 	pid_t	pid;
 
@@ -89,6 +93,7 @@ void	exec_fork(t_prompt *prompt, t_list *cmd, int fd[2])
 }
 
 void	*check_to_fork(t_prompt *prompt, t_list *cmd, int pipe_fd[2])
+// check the command before make chiled process.
 {
 	t_mini	*n;
 	DIR		*dir;
