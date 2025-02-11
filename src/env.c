@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/10 19:09:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 12:41:16 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*mini_getenv(char *var, char **envp, int n)
 {
 	int	i;
 	int	n2;
+	char *sub;
 
 	i = 0;
 	if (n < 0)
@@ -26,18 +27,20 @@ char	*mini_getenv(char *var, char **envp, int n)
 		if (n2 < ft_strchr_i(envp[i], '='))
 			n2 = ft_strchr_i(envp[i], '=');
 		if (!ft_strncmp(envp[i], var, n2))
-			return (ft_substr(envp[i], n2 + 1, ft_strlen(envp[i])));
+		{
+			sub = ft_substr(envp[i], n2 + 1, ft_strlen(envp[i]));
+			if (!sub)
+			{
+				ft_free_matrix(&envp);
+				mini_perror(MEM, ".", 1);
+				exit(1);
+			}
+			return (sub);
+		}
 		i++;
 	}
 	return (NULL);
 }
-
-// char	**return_and_free(char **envp, int i, char *new_entry)
-// {
-// 	free(envp[i]);
-// 	envp[i] = new_entry;
-// 	return (envp);
-// }
 
 char	**mini_setenv(char *var, char *value, char **envp, int n)
 // add to env if not exist, if exist edit it.
@@ -51,8 +54,19 @@ char	**mini_setenv(char *var, char *value, char **envp, int n)
 		n = ft_strlen(var);
 	add_equal = ft_strjoin(var, "=");
 	if (!add_equal)
-	    return (envp);
+	{
+		ft_free_matrix(&envp);
+		mini_perror(MEM, ".", 1);
+		return (NULL);
+	}
 	new_entry = ft_strjoin(add_equal, value);
+	if (!new_entry)
+	{
+		ft_free_matrix(&envp);
+		free(add_equal);
+		mini_perror(MEM, ".", 1);
+		return (NULL);
+	}
 	free(add_equal);
 	if (!new_entry)
 	    return (envp);
@@ -69,6 +83,11 @@ char	**mini_setenv(char *var, char *value, char **envp, int n)
 		i++;
 	}
 	envp = ft_extend_matrix(envp, new_entry);
+	if (!envp)
+	{
+		mini_perror(MEM, ".", 1);
+		return (NULL);
+	}
 	free(new_entry);
 	return (envp);
 }

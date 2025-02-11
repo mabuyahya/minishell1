@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 14:07:10 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,38 @@ static char	**split_all(char **args, t_prompt *prompt)
 		args[i] = expand_vars(args[i], -1, quotes, prompt);
 		args[i] = expand_path(args[i], -1, quotes,
 			mini_getenv("HOME", prompt->envp, 4));
+		if (!args[i])
+		{
+			ft_free_matrix(&args);
+			ft_free_matrix(&prompt->envp);
+			if (subsplit != NULL)
+				ft_free_matrix(&prompt->envp);
+			mini_perror(MEM, ".", 1);
+			exit(1);
+		}
 		subsplit = ft_cmdsubsplit(args[i], "<|>");
-		ft_matrix_replace_in(&args, subsplit, i);
+		if (!subsplit)
+		{
+			ft_free_matrix(&args);
+			ft_free_matrix(&prompt->envp);
+			mini_perror(MEM, ".", 1);
+			exit(1);
+		}
+		if (!ft_matrix_replace_in(&args, subsplit, i))
+		{
+			ft_free_matrix(&args);
+			ft_free_matrix(&prompt->envp);
+			ft_free_matrix(&subsplit);
+			mini_perror(MEM, ".", 1);
+			exit(1);
+		}
 		i = i + ft_matrixlen(subsplit) - 1;
 		ft_free_matrix(&subsplit);
 	}
 	return (args);
 }
 
+////////////////////////////////////////////////////
 static void	*parse_args(char **args, t_prompt *p)
 // waitpid(-1, NULL, NULL) : to wait any chiled process.
 {
@@ -74,7 +98,7 @@ void	*check_args(char *out, t_prompt *p)
 	}
 	if (out[0] != '\0')
 		add_history(out);
-	a = ft_cmdtrim(out, " ");
+	a = ft_cmdtrim(out, " ", p);
 	free(out);
 	if (!a)
 		mini_perror(QUOTE, NULL, 1);

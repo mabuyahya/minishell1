@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 13:11:23 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,22 @@ static char	**ft_fill_array(char **arr, const char *s, char *delims)
 			i++;
 		}
 		if (start < i)
-			arr[word++] = ft_substr(s, start, i - start);
+		{
+			arr[word] = ft_substr(s, start, i - start);
+			if (arr[word] == NULL)
+			{
+				ft_free_matrix(&arr);
+				mini_perror(MEM, ".", 1);
+				return (NULL);
+			}
+			word++;
+		}
 	}
 	arr[word] = NULL;
 	return (arr);
 }
 
-char	**ft_cmdtrim(const char *s, char *delims)
+char	**ft_cmdtrim(const char *s, char *delims, t_prompt *p)
 // split the command by spaces and ' and ".
 {
 	char	**arr;
@@ -85,9 +94,12 @@ char	**ft_cmdtrim(const char *s, char *delims)
 	words = ft_count_words(s, delims);
 	if (words == -1)
 		return (NULL);
-
 	arr = malloc((words + 1) * sizeof(char *));
 	if (!arr)
-		return (NULL);
+	{
+		mini_perror(MEM, ".", 1);
+		ft_free_matrix(&p->envp);
+		exit(1);
+	}
 	return (ft_fill_array(arr, s, delims));
 }
