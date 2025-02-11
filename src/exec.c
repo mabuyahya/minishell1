@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 18:49:29 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 16:39:15 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,21 @@ void	child_builtin(t_prompt *prompt, t_mini *n, int l, t_list *cmd)
 		execve(n->full_path, n->full_cmd, prompt->envp);
 	else if (n->full_cmd && !ft_strncmp(*n->full_cmd, "pwd", l) \
 		&& l == 3)
+	{
+		ft_free_matrix(&prompt->envp);
 		g_status = mini_pwd();
+	}
 	else if (is_builtin(n) && n->full_cmd && \
 		!ft_strncmp(*n->full_cmd, "echo", l) && l == 4)
+	{
+		ft_free_matrix(&prompt->envp);
 		g_status = mini_echo(cmd);
+	}
 	else if (is_builtin(n) && n->full_cmd && \
 		!ft_strncmp(*n->full_cmd, "env", l) && l == 3)
 	{
 		ft_putmatrix_fd(prompt->envp, 1, 1);
+		ft_free_matrix(&prompt->envp);
 		g_status = 0;
 	}
 }

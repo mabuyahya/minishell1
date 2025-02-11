@@ -73,7 +73,7 @@ int		mini_export(t_prompt *prompt);
 int		mini_unset(t_prompt *prompt);
 int		mini_exit(t_list *cmd, int *is_exit);
 void	*check_args(char *out, t_prompt *p);
-char	**ft_cmdtrim(char const *s, char *set, t_prompt *prompt);
+char	**ft_cmdtrim(char *s, char *set, t_prompt *p);
 char	**ft_cmdsubsplit(char const *s, char *set);
 char	*ft_strtrim_all(char const *s1, int squote, int dquote);
 t_list	*fill_nodes(char **args, int i);

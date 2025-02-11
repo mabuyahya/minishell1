@@ -25,8 +25,6 @@ char	**ft_extend_matrix(char **in, char *newstr)
 	if (!out)
 		return (NULL);
 	out[len + 1] = NULL;
-	if (!out)
-		return (in);
 	while (++i < len)
 	{
 		out[i] = ft_strdup(in[i]);
@@ -34,9 +32,15 @@ char	**ft_extend_matrix(char **in, char *newstr)
 		{
 			ft_free_matrix(&in);
 			ft_free_matrix(&out);
+			return (NULL);
 		}
 	}
 	out[i] = ft_strdup(newstr);
+	if (!out[i])
+	{
+		ft_free_matrix(&in);
+		return (NULL);	
+	}
 	ft_free_matrix(&in);
 	return (out);
 }
@@ -115,19 +119,11 @@ char	**ft_matrix_replace_in(char ***big, char **small, int n)
 	while (aux && big[0][++i[0]])
 	{
 		if (i[0] != n)
-		{
 			aux[++i[2]] = ft_strdup(big[0][i[0]]);
-			if (!aux[++i[2]])
-				return (NULL);
-		}
 		else
 		{
 			while (small && small[++i[1]])
-			{
 				aux[++i[2]] = ft_strdup(small[i[1]]);
-				if (!aux[i[2]])
-					return (NULL);
-			}
 		}
 	}
 	ft_free_matrix(big);

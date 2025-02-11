@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/11 14:07:10 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 19:19:40 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,38 +27,14 @@ static char	**split_all(char **args, t_prompt *prompt)
 		args[i] = expand_vars(args[i], -1, quotes, prompt);
 		args[i] = expand_path(args[i], -1, quotes,
 			mini_getenv("HOME", prompt->envp, 4));
-		if (!args[i])
-		{
-			ft_free_matrix(&args);
-			ft_free_matrix(&prompt->envp);
-			if (subsplit != NULL)
-				ft_free_matrix(&prompt->envp);
-			mini_perror(MEM, ".", 1);
-			exit(1);
-		}
 		subsplit = ft_cmdsubsplit(args[i], "<|>");
-		if (!subsplit)
-		{
-			ft_free_matrix(&args);
-			ft_free_matrix(&prompt->envp);
-			mini_perror(MEM, ".", 1);
-			exit(1);
-		}
-		if (!ft_matrix_replace_in(&args, subsplit, i))
-		{
-			ft_free_matrix(&args);
-			ft_free_matrix(&prompt->envp);
-			ft_free_matrix(&subsplit);
-			mini_perror(MEM, ".", 1);
-			exit(1);
-		}
+		ft_matrix_replace_in(&args, subsplit, i);
 		i = i + ft_matrixlen(subsplit) - 1;
 		ft_free_matrix(&subsplit);
 	}
 	return (args);
 }
 
-////////////////////////////////////////////////////
 static void	*parse_args(char **args, t_prompt *p)
 // waitpid(-1, NULL, NULL) : to wait any chiled process.
 {
@@ -85,6 +61,23 @@ static void	*parse_args(char **args, t_prompt *p)
 	return (p);
 }
 
+int	is_numeric(char *str)
+{
+	int i = 0;
+
+	if (!str || !str[0])
+		return (0);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (!isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	*check_args(char *out, t_prompt *p)
 // all solution.
 {
@@ -99,7 +92,8 @@ void	*check_args(char *out, t_prompt *p)
 	if (out[0] != '\0')
 		add_history(out);
 	a = ft_cmdtrim(out, " ", p);
-	free(out);
+	if (out)
+		free(out);
 	if (!a)
 		mini_perror(QUOTE, NULL, 1);
 	if (!a)

@@ -38,24 +38,24 @@ $(NAME): $(LIBFT) $(OBJ)
 
 # Compile Source Files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build Libft
 $(LIBFT): | $(LIBFT_DIR)
-	@make -C $(LIBFT_DIR)
+	make -C $(LIBFT_DIR)
 
 # Cleanup
 clean:
-	@make clean -C $(LIBFT_DIR)
-	@$(RM) -r $(OBJ_DIR)
+	make clean -C $(LIBFT_DIR)
+	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
-	@$(RM) $(NAME)
-	@$(RM) $(LIBFT)
+	$(RM) $(NAME)
+	$(RM) $(LIBFT)
 
 # Create Directories if Needed
 $(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)
 
 # Recompile Everything
 re: fclean all

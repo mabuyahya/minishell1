@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 17:02:33 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/11 12:59:56 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/10 19:01:06 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,6 @@ char	*mini_getprompt(t_prompt prompt)
 
 	temp = get_user(prompt);
 	temp2 = ft_strjoin(temp, "@minishell");
-	if (!temp2)
-	{
-		free(temp);
-		ft_free_matrix(&prompt.envp);
-		mini_perror(MEM, ".", 1);
-		exit(1);
-	}
 	free(temp);
 	aux = get_home(prompt);
 	temp = ft_strjoin(temp2, aux);

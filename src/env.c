@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/11 12:41:16 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 17:07:22 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*mini_getenv(char *var, char **envp, int n)
 			if (!sub)
 			{
 				ft_free_matrix(&envp);
-				mini_perror(MEM, ".", 1);
+				mini_perror(MEM, NULL, 1);
 				exit(1);
 			}
 			return (sub);
@@ -41,6 +41,13 @@ char	*mini_getenv(char *var, char **envp, int n)
 	}
 	return (NULL);
 }
+
+// char	**return_and_free(char **envp, int i, char *new_entry)
+// {
+// 	free(envp[i]);
+// 	envp[i] = new_entry;
+// 	return (envp);
+// }
 
 char	**mini_setenv(char *var, char *value, char **envp, int n)
 // add to env if not exist, if exist edit it.
@@ -55,17 +62,19 @@ char	**mini_setenv(char *var, char *value, char **envp, int n)
 	add_equal = ft_strjoin(var, "=");
 	if (!add_equal)
 	{
+		free(value);
 		ft_free_matrix(&envp);
-		mini_perror(MEM, ".", 1);
-		return (NULL);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
 	}
 	new_entry = ft_strjoin(add_equal, value);
 	if (!new_entry)
 	{
+		free(value);
 		ft_free_matrix(&envp);
-		free(add_equal);
-		mini_perror(MEM, ".", 1);
-		return (NULL);
+		mini_perror(MEM, NULL, 1);
+		free(new_entry);
+		exit(1);
 	}
 	free(add_equal);
 	if (!new_entry)
@@ -85,8 +94,9 @@ char	**mini_setenv(char *var, char *value, char **envp, int n)
 	envp = ft_extend_matrix(envp, new_entry);
 	if (!envp)
 	{
-		mini_perror(MEM, ".", 1);
-		return (NULL);
+		mini_perror(MEM, NULL, 1);
+		free(new_entry);
+		exit(1);
 	}
 	free(new_entry);
 	return (envp);

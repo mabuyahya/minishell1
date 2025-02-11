@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/11 13:16:16 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 17:56:12 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,7 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt)
 		pos = ft_strlen(str) - 1;
 	aux = ft_substr(str, 0, i - 1);
 	if (!aux)
-	{
-		ft_free_matrix(&prompt->envp);
-		mini_perror(MEM, ".", 1);
-		exit(1);
-	}
+		return (NULL);
 	var = mini_getenv(&str[i], prompt->envp, \
 		ft_strchars_i(&str[i], "\"\'$|>< "));
 	if (!var && str[i] == '$')
@@ -71,26 +67,20 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt)
 	{
 		free(aux);
 		ft_free_matrix(&prompt->envp);
-		mini_perror(MEM, ".", 1);
+		mini_perror(MEM, NULL, 1);
 		exit(1);
 	}
 	path = ft_strjoin(aux, var);
 	if (!path)
 	{
 		free(aux);
+		free(var);
 		ft_free_matrix(&prompt->envp);
-		mini_perror(MEM, ".", 1);
+		mini_perror(MEM, NULL, 1);
 		exit(1);
 	}
 	free(aux);
 	aux = ft_strjoin(path, &str[i + pos]);
-	if (!aux)
-	{
-		free(aux);
-		ft_free_matrix(&prompt->envp);
-		mini_perror(MEM, ".", 1);
-		exit(1);
-	}
 	free(var);
 	free(path);
 	free(str);
@@ -108,6 +98,7 @@ char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt)
 			quotes[0] = !quotes[0];
 		else if (str[i] == '\"' && !quotes[0])
 			quotes[1] = !quotes[1];
+
 		if (!quotes[0] && str[i] == '$' && str[i + 1] && 
 			ft_strchars_i(&str[i + 1], "/~%^{}:; ") && (!quotes[1] || str[i + 1] != '\"'))
 		{

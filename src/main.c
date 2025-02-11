@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/11 12:56:15 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/11 18:07:55 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,43 +44,21 @@ static t_prompt	init_vars(t_prompt prompt, char *str, char **argv)
 
 	(void)(argv);
 	str = getcwd(NULL, 0);
-	if (!str)
-	{
-		ft_free_matrix(&prompt.envp);
-		ft_putstr_fd("minishell : can not get the path\n", 2);
-		exit(1);
-	}
 	prompt.envp = mini_setenv("PWD", str, prompt.envp, 3);
-	if (!prompt.envp)
-		exit(1);
 	free(str);
 	str = mini_getenv("SHLVL", prompt.envp, 5);
 	if (!str || ft_atoi(str) <= 0)
-	{
 		num = ft_strdup("1");
-		if (!num)
-		{
-			mini_perror(MEM, ".", 1);
-			ft_free_matrix(&prompt.envp);
-			free(str);
-			exit(1);
-		}
-	}
 	else
-	{
 		num = ft_itoa(ft_atoi(str) + 1);
-		if (!num)
-		{
-			mini_perror(MEM, ".", 1);
-			ft_free_matrix(&prompt.envp);
-			free(str);
-			exit(1);
-		}
-	}
 	free(str);
-	prompt.envp = mini_setenv("SHLVL", num, prompt.envp, 5);
-	if (!prompt.envp)
+	if (!num)
+	{
+		ft_free_matrix(&prompt.envp);
+		mini_perror(MEM, NULL, 1);
 		exit(1);
+	}
+	prompt.envp = mini_setenv("SHLVL", num, prompt.envp, 5);
 	free(num);
 	str = mini_getenv("PATH", prompt.envp, 4);
 	if (!str)
@@ -102,10 +80,11 @@ static t_prompt	init_prompt(char **argv, char **envp)
 
 	str = NULL;
 	prompt.cmds = NULL;
+	prompt.envp = NULL;
 	prompt.envp = ft_dup_matrix(envp);
-	if (!prompt.envp || !prompt.envp[0])
+	if (!prompt.envp)
 	{
-		mini_perror(MEM, ".", 1);
+		mini_perror(MEM, NULL, 1);
 		exit(1);
 	}
 	g_status = 0;
@@ -132,7 +111,10 @@ int	main(int argc, char **argv, char **envp)
 			out = readline("guest@minishell $ ");
 		free(str);
 		if (!check_args(out, &prompt))
+		{
+			ft_free_matrix(&prompt.envp);
 			break;
+		}
 	}
 	ft_free_matrix(&prompt.envp);
 	clear_history();
