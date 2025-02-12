@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/11 17:56:12 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/12 11:41:49 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,22 @@ char	*expand_path(char *str, int i, int quotes[2], char *var)
 		if (!quotes[0] && !quotes[1] && str[i] == '~' && (i == 0 || str[i - 1] != '$'))
 		{
 			aux = ft_substr(str, 0, i);
+			if (!aux)
+				return (NULL);
 			new_str = ft_strjoin(aux, var);
+			if (!new_str)
+			{
+				free(aux);
+				return (NULL);
+			}
 			free(aux);
 			aux = ft_strjoin(new_str, str + i + 1);
+			if (!aux)
+			{
+				if (new_str)
+					free(new_str);
+				return (NULL);
+			}
 			free(new_str);
 			free(str);
 			str = aux;
@@ -44,7 +57,7 @@ char	*expand_path(char *str, int i, int quotes[2], char *var)
 	return (str);
 }
 
-static char	*get_substr_var(char *str, int i, t_prompt *prompt)
+static char	*get_substr_var(char *str, int i, t_prompt *prompt, char **args)
 {
 	char	*aux;
 	int		pos;
@@ -55,6 +68,13 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt)
 	if (pos == -1)
 		pos = ft_strlen(str) - 1;
 	aux = ft_substr(str, 0, i - 1);
+	if (!aux)
+	{
+		ft_free_matrix(&prompt->envp);
+		ft_free_matrix(&args);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
+	}
 	if (!aux)
 		return (NULL);
 	var = mini_getenv(&str[i], prompt->envp, \
@@ -81,13 +101,21 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt)
 	}
 	free(aux);
 	aux = ft_strjoin(path, &str[i + pos]);
+	if (!aux)
+	{
+		free(path);
+		free(var);
+		ft_free_matrix(&prompt->envp);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
+	}
 	free(var);
 	free(path);
 	free(str);
 	return (aux);
 }
 
-char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt)
+char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt, char **args)
 // expand commands.
 {
 	quotes[0] = 0;
@@ -102,7 +130,7 @@ char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt)
 		if (!quotes[0] && str[i] == '$' && str[i + 1] && 
 			ft_strchars_i(&str[i + 1], "/~%^{}:; ") && (!quotes[1] || str[i + 1] != '\"'))
 		{
-			str = get_substr_var(str, ++i, prompt);
+			str = get_substr_var(str, ++i, prompt, args);
 			i = -1;
 		}
 	}

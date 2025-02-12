@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/11 18:07:55 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/12 11:26:25 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,21 +95,17 @@ static t_prompt	init_prompt(char **argv, char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char				*str;
 	char				*out;
 	t_prompt			prompt;
 
+	(void)(argc);
+	(void)(argv);
 	prompt = init_prompt(argv, envp);
-	while (argv && argc)
+	while (1)
 	{
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		str = mini_getprompt(prompt);
-		if (str)
-			out = readline(str);
-		else
-			out = readline("guest@minishell $ ");
-		free(str);
+		out = readline("sbibers $>");
 		if (!check_args(out, &prompt))
 		{
 			ft_free_matrix(&prompt.envp);

@@ -119,11 +119,25 @@ char	**ft_matrix_replace_in(char ***big, char **small, int n)
 	while (aux && big[0][++i[0]])
 	{
 		if (i[0] != n)
+		{
 			aux[++i[2]] = ft_strdup(big[0][i[0]]);
+			if (!aux[i[2]])
+			{
+				ft_free_matrix(&aux);
+				return (NULL);
+			}
+		}
 		else
 		{
 			while (small && small[++i[1]])
+			{
 				aux[++i[2]] = ft_strdup(small[i[1]]);
+				if (!aux[i[2]])
+				{
+					ft_free_matrix(&aux);
+					return (NULL);
+				}
+			}
 		}
 	}
 	ft_free_matrix(big);

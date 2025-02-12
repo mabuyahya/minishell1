@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/11 16:37:41 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/12 16:36:46 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 extern int	g_status;
 
-int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, int n)
+int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, char **args)
 // execute command, and check if the command built in.
 {
 	char	**a;
+	int 	n;
 
 	while (cmd)
 	{
@@ -28,16 +29,16 @@ int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, int n)
 		if (a && !ft_strncmp(*a, "exit", n) && n == 4)
 			g_status = mini_exit(cmd, is_exit);
 		else if (!cmd->next && a && !ft_strncmp(*a, "cd", n) && n == 2)
-			g_status = mini_cd(prompt);
+			g_status = mini_cd(prompt, cmd, args);
 		else if (!cmd->next && a && !ft_strncmp(*a, "export", n) && n == 6)
-			g_status = mini_export(prompt);
+			g_status = mini_export(prompt, cmd, args);
 		else if (!cmd->next && a && !ft_strncmp(*a, "unset", n) && n == 5)
-			g_status = mini_unset(prompt);
+			g_status = mini_unset(prompt, cmd, args);
 		else
 		{
 			signal(SIGINT, SIG_IGN);
 			signal(SIGQUIT, SIG_IGN);
-			exec_cmd(prompt, cmd);
+			exec_cmd(prompt, cmd, args);
 		}
 		cmd = cmd->next;
 	}
@@ -72,7 +73,15 @@ int	is_builtin(t_mini *n)
 	return (0);
 }
 
-int	mini_cd(t_prompt *p)
+static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
+{
+	ft_lstclear(&cmds, free_content);
+	ft_free_matrix(&temp);
+	ft_free_matrix(&args);
+	return (NULL);
+}
+
+int	mini_cd(t_prompt *p, t_list *cmd, char **args)
 // handle the command cd.
 {
 	char	**str[2];
@@ -82,20 +91,59 @@ int	mini_cd(t_prompt *p)
 	str[0] = ((t_mini *)p->cmds->content)->full_cmd;
 	aux = mini_getenv("HOME", p->envp, 4);
 	if (!aux)
+	{
 		aux = ft_strdup("");
+		if (!aux)
+		{
+			ft_free_matrix(&str[0]);
+			stop_fill(cmd, args, p->envp);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
+	}
 	str[1] = ft_extend_matrix(NULL, aux);
 	free(aux);
+	if (!str[1])
+	{
+		ft_free_matrix(&str[0]);
+		stop_fill(cmd, args, p->envp);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
+	}
 	aux = getcwd(NULL, 0);
 	str[1] = ft_extend_matrix(str[1], aux);
 	free(aux);
+	if (!str[1])
+	{
+		ft_free_matrix(&str[0]);
+		stop_fill(cmd, args, p->envp);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
+	}
 	cd_error(str);
 	if (!g_status)
 		p->envp = mini_setenv("OLDPWD", str[1][1], p->envp, 6);
 	aux = getcwd(NULL, 0);
 	if (!aux)
+	{
 		aux = ft_strdup("");
+		if (!aux)
+		{
+			ft_free_matrix(&str[0]);
+			stop_fill(cmd, args, p->envp);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
+	}
 	str[1] = ft_extend_matrix(str[1], aux);
 	free(aux);
+	if (!str[1])
+	{
+		ft_free_matrix(&str[0]);
+		stop_fill(cmd, args, p->envp);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
+	}
 	p->envp = mini_setenv("PWD", str[1][2], p->envp, 3);
 	ft_free_matrix(&str[1]);
 	return (g_status);

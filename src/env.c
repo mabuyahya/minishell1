@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/11 17:07:22 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/12 14:50:55 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,6 @@ char	*mini_getenv(char *var, char **envp, int n)
 	}
 	return (NULL);
 }
-
-// char	**return_and_free(char **envp, int i, char *new_entry)
-// {
-// 	free(envp[i]);
-// 	envp[i] = new_entry;
-// 	return (envp);
-// }
 
 char	**mini_setenv(char *var, char *value, char **envp, int n)
 // add to env if not exist, if exist edit it.
@@ -119,7 +112,15 @@ static int	var_in_envp(char *argv, char **envp, int ij[2])
 	return (0);
 }
 
-int	mini_export(t_prompt *prompt)
+static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
+{
+	ft_lstclear(&cmds, free_content);
+	ft_free_matrix(&temp);
+	ft_free_matrix(&args);
+	return (NULL);
+}
+
+int	mini_export(t_prompt *prompt, t_list *cmd, char **args)
 {
 	int		ij[2];
 	int		pos;
@@ -136,16 +137,32 @@ int	mini_export(t_prompt *prompt)
 			{
 				free(prompt->envp[ij[1]]);
 				prompt->envp[ij[1]] = ft_strdup(argv[ij[0]]);
+				{
+					if (!prompt->envp[ij[1]])
+					{
+						stop_fill(cmd, args, prompt->envp);
+						mini_perror(MEM, NULL, 1);
+						exit(1);
+					}
+				}
 			}
 			else if (!pos)
+			{
 				prompt->envp = ft_extend_matrix(prompt->envp, argv[ij[0]]);
+				if (!prompt->envp)
+				{
+					stop_fill(cmd, args, NULL);
+					mini_perror(MEM, NULL, 1);
+					exit(1);
+				}
+			}
 			ij[0]++;
 		}
 	}
 	return (0);
 }
 
-int	mini_unset(t_prompt *prompt)
+int	mini_unset(t_prompt *prompt, t_list *cmd, char **args)
 {
 	char	**argv;
 	char	*aux;
@@ -160,11 +177,24 @@ int	mini_unset(t_prompt *prompt)
 			if (argv[ij[0]][ft_strlen(argv[ij[0]]) - 1] != '=')
 			{
 				aux = ft_strjoin(argv[ij[0]], "=");
+				if (!aux)
+				{
+					stop_fill(cmd, args, prompt->envp);
+					mini_perror(MEM, NULL, 1);
+					exit(1);
+				}
 				free(argv[ij[0]]);
 				argv[ij[0]] = aux;
 			}
 			if (var_in_envp(argv[ij[0]], prompt->envp, ij))
-				ft_matrix_replace_in(&prompt->envp, NULL, ij[1]);
+			{
+				if (!ft_matrix_replace_in(&prompt->envp, NULL, ij[1]))
+				{
+					stop_fill(cmd, args, prompt->envp);
+					mini_perror(MEM, NULL, 1);
+					exit(1);
+				}
+			}
 		}
 	}
 	return (0);

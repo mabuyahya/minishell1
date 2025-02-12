@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 15:51:24 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/11 16:30:05 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/12 16:37:59 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,15 @@ static char	*find_command(char **env_path, char *cmd, char *full_path)
 	return (full_path);
 }
 
-static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
+static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
+{
+	ft_lstclear(&cmds, free_content);
+	ft_free_matrix(&temp);
+	ft_free_matrix(&args);
+	return (NULL);
+}
+
+static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path, char **args)
 // if the argument is directory.
 // if the command like this : /bin/ls, or ./minishell.
 {
@@ -55,14 +63,49 @@ static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
 	if (n && n->full_cmd && ft_strchr(*n->full_cmd, '/') && !dir)
 	{
 		*s = ft_split(*n->full_cmd, '/');
+		if (!*s)
+		{
+			stop_fill(cmd, args, prompt->envp);
+			if (path)
+				free(path);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
 		n->full_path = ft_strdup(*n->full_cmd);
+		if (!n->full_path)
+		{
+			stop_fill(cmd, args, prompt->envp);
+			ft_free_matrix(s);
+			if (path)
+				free(path);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
 		free(n->full_cmd[0]);
 		n->full_cmd[0] = ft_strdup(s[0][ft_matrixlen(*s) - 1]);
+		if (!n->full_cmd[0])
+		{
+			stop_fill(cmd, args, prompt->envp);
+			ft_free_matrix(s);
+			if (path)
+				free(path);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
 	}
 	else if (!is_builtin(n) && n && n->full_cmd && !dir)
 	{
 		path = mini_getenv("PATH", prompt->envp, 4);
 		*s = ft_split(path, ':');
+		if (!*s)
+		{
+			stop_fill(cmd, args, prompt->envp);
+			ft_free_matrix(s);
+			if (path)
+				free(path);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
 		free(path);
 		n->full_path = find_command(*s, *n->full_cmd, n->full_path);
 		if (!n->full_path || !n->full_cmd[0] || !n->full_cmd[0][0])
@@ -71,13 +114,13 @@ static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
 	return (dir);
 }
 
-void	get_cmd(t_prompt *prompt, t_list *cmd, char **s, char *path)
+void	get_cmd(t_prompt *prompt, t_list *cmd, char **s, char *path, char **args)
 {
 	t_mini	*n;
 	DIR		*dir;
 
 	n = cmd->content;
-	dir = cmd_checks(prompt, cmd, &s, path);
+	dir = cmd_checks(prompt, cmd, &s, path, args);
 	if (!is_builtin(n) && n && n->full_cmd && dir)
 		mini_perror(IS_DIR, *n->full_cmd, 126);
 	else if (!is_builtin(n) && n && n->full_path && \
@@ -91,12 +134,12 @@ void	get_cmd(t_prompt *prompt, t_list *cmd, char **s, char *path)
 	ft_free_matrix(&s);
 }
 
-void	*exec_cmd(t_prompt *prompt, t_list *cmd)
+void	*exec_cmd(t_prompt *prompt, t_list *cmd, char **args)
 // execute the command, if the command does not built in.
 {
 	int		pipe_fd[2];
 
-	get_cmd(prompt, cmd, NULL, NULL);
+	get_cmd(prompt, cmd, NULL, NULL, args);
 	if (pipe(pipe_fd) == -1)
 		return (mini_perror(PIPERR, NULL, 1));
 	if (!check_to_fork(prompt, cmd, pipe_fd))
