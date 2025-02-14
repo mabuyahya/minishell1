@@ -6,7 +6,7 @@
 /*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/14 13:41:06 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/14 17:04:41 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 extern int	g_status;
 
-static void not_builtin(t_prompt *prom, t_list *cmd, char **args)
+static void not_builtin(t_prompt *prom, t_list *cmd)
 {
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	exec_cmd(prom, cmd, args);
+	exec_cmd(prom, cmd);
 }
 
 int	builtin(t_prompt *prom, t_list *cmd, int *exit_num, char **args)
@@ -42,7 +42,7 @@ int	builtin(t_prompt *prom, t_list *cmd, int *exit_num, char **args)
 		else if (!cmd->next && str && !ft_strncmp(*str, "unset", n) && n == 5)
 			g_status = mini_unset(prom, cmd, args);
 		else
-			not_builtin(prom, cmd, args);
+			not_builtin(prom, cmd);
 		cmd = cmd->next;
 	}
 	return (g_status);

@@ -6,7 +6,7 @@
 /*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/14 13:22:44 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/14 17:36:21 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,12 @@ static void allocate_fail(t_prompt *prom, char **args, char *str)
 	exit(1);
 }
 
-static int convert_pid_to_string(t_prompt *prom, t_expand_var *s_str, char *str, int *i)
+static void convert_pid_to_string(t_prompt *prom, t_expand_var *s_str, char *str, int *i)
 {
 	if (!s_str->var && str[*i] == '$')
 		s_str->var = ft_itoa(prom->pid);
 	else if (!s_str->var && str[*i] == '?')
 		s_str->var = ft_itoa(g_status);
-	if (!s_str->var)
-		return (0);
-	return (1);
 }
 
 static char	*get_vars(char *str, int i, t_prompt *prom, char **args)
@@ -74,28 +71,29 @@ static char	*get_vars(char *str, int i, t_prompt *prom, char **args)
 
 	s_str.pos = ft_strchars_i(&str[i], "|\"\'$?>< ") + (ft_strchr("$?", str[i]) != 0);
 	if (s_str.pos == -1)
-		s_str.pos = ft_strlen(str) - 1;
+		s_str.pos = ft_strlen(&str[i]);
 	s_str.aux = ft_substr(str, 0, i - 1);
 	if (!s_str.aux)
 		allocate_fail(prom, args, NULL);
-	if (!s_str.aux)
-		return (NULL);
-	s_str.var = mini_getenv(&str[i], prom->envp,
-		ft_strchars_i(&str[i], "\"\'$|>< "));
-	if (!convert_pid_to_string(prom, &s_str, str, &i))
+	s_str.var = mini_getenv(&str[i], prom->envp, ft_strchars_i(&str[i], "\"\'$|>< "));
+	convert_pid_to_string(prom, &s_str, str, &i);
+	if (!s_str.var) 
+		s_str.var = ft_strdup("");
+	if (!s_str.var)
 		allocate_fail(prom, args, s_str.aux);
 	s_str.path = ft_strjoin(s_str.aux, s_str.var);
 	free(s_str.aux);
-	if (!s_str.path)
-		allocate_fail(prom, args, s_str.var);	
-	s_str.aux = ft_strjoin(s_str.path, &str[i + s_str.pos]);
 	free(s_str.var);
+	if (!s_str.path)
+	allocate_fail(prom, args, NULL);
+	s_str.aux = ft_strjoin(s_str.path, &str[i + s_str.pos]);
 	free(s_str.path);
 	free(str);
 	if (!s_str.aux)
-		allocate_fail(prom, args, NULL);
+	allocate_fail(prom, args, NULL);
 	return (s_str.aux);
 }
+
 
 char *expand_vars(char *str, int i, int quotes[2], t_prompt *prompt, char **args)
 // expand the commands.
