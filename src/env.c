@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/12 14:50:55 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/14 14:09:29 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void stop_get(char **envp)
+{
+	ft_free_matrix(&envp);
+	mini_perror(MEM, NULL, 1);
+	exit(1);
+}
 
 char	*mini_getenv(char *var, char **envp, int n)
 {
@@ -30,11 +37,7 @@ char	*mini_getenv(char *var, char **envp, int n)
 		{
 			sub = ft_substr(envp[i], n2 + 1, ft_strlen(envp[i]));
 			if (!sub)
-			{
-				ft_free_matrix(&envp);
-				mini_perror(MEM, NULL, 1);
-				exit(1);
-			}
+				stop_get(envp);
 			return (sub);
 		}
 		i++;
@@ -42,56 +45,57 @@ char	*mini_getenv(char *var, char **envp, int n)
 	return (NULL);
 }
 
-char	**mini_setenv(char *var, char *value, char **envp, int n)
-// add to env if not exist, if exist edit it.
+static void stop_set(char *value, char **envp, char *new_entry)
 {
-	int		i;
-	char	*new_entry;
-	char	*equal_pos;
-	char	*add_equal;
+	if (envp && envp[0])
+		ft_free_matrix(&envp);
+	if (value)
+		free(value);
+	if (new_entry)
+		free(new_entry);
+	mini_perror(MEM, NULL, 1);
+	exit(1);
+}
+
+static char **set_env_util(t_set_env *set_env, char **envp, char *var)
+{
+	set_env->equal_pos = ft_strchr(envp[set_env->i], '=');
+	if (set_env->equal_pos && !ft_strncmp(envp[set_env->i], var, set_env->equal_pos - envp[set_env->i]))
+	{
+		free(envp[set_env->i]);
+		envp[set_env->i] = set_env->new_entry;
+		return (envp);
+	}
+	return (NULL);
+}
+
+// add to env if not exist, if exist edit it.
+char	**mini_setenv(char *var, char *value, char **envp, int n)
+{
+	t_set_env set_env;
 
 	if (n < 0)
 		n = ft_strlen(var);
-	add_equal = ft_strjoin(var, "=");
-	if (!add_equal)
-	{
-		free(value);
-		ft_free_matrix(&envp);
-		mini_perror(MEM, NULL, 1);
-		exit(1);
-	}
-	new_entry = ft_strjoin(add_equal, value);
-	if (!new_entry)
-	{
-		free(value);
-		ft_free_matrix(&envp);
-		mini_perror(MEM, NULL, 1);
-		free(new_entry);
-		exit(1);
-	}
-	free(add_equal);
-	if (!new_entry)
+	set_env.add_equal = ft_strjoin(var, "=");
+	if (!set_env.add_equal)
+		stop_set(value, envp, NULL);
+	set_env.new_entry = ft_strjoin(set_env.add_equal, value);
+	if (!set_env.new_entry)
+		stop_set(value ,envp, set_env.add_equal);
+	free(set_env.add_equal);
+	if (!set_env.new_entry)
 	    return (envp);
-	i = 0;
-	while (envp && envp[i])
+	set_env.i = 0;
+	while (envp && envp[set_env.i])
 	{
-	    equal_pos = ft_strchr(envp[i], '=');
-	    if (equal_pos && !ft_strncmp(envp[i], var, equal_pos - envp[i]))
-	    {
-			free(envp[i]);
-			envp[i] = new_entry;
-			return (envp);
-		}
-		i++;
+		if (set_env_util(&set_env, envp, var))
+			return(envp);
+		set_env.i++;
 	}
-	envp = ft_extend_matrix(envp, new_entry);
+	envp = ft_extend_matrix(envp, set_env.new_entry);
 	if (!envp)
-	{
-		mini_perror(MEM, NULL, 1);
-		free(new_entry);
-		exit(1);
-	}
-	free(new_entry);
+		stop_set(NULL, NULL, set_env.new_entry);
+	free(set_env.new_entry);
 	return (envp);
 }
 
@@ -120,56 +124,92 @@ static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
 	return (NULL);
 }
 
+static void	print_envp(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		printf("%s\n", envp[i]);
+		i++;
+	}
+}
+
+static void	update_env_var(t_prompt *prom, t_list *cmd, char **args, char *arg)
+{
+	int	ij[2];
+	int	pos;
+
+	pos = var_in_envp(arg, prom->envp, ij);
+	if (pos == 1)
+	{
+		free(prom->envp[ij[1]]);
+		prom->envp[ij[1]] = ft_strdup(arg);
+		if (!prom->envp[ij[1]])
+		{
+			stop_fill(cmd, args, prom->envp);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
+	}
+	else if (!pos)
+	{
+		prom->envp = ft_extend_matrix(prom->envp, arg);
+		if (!prom->envp)
+		{
+			stop_fill(cmd, args, NULL);
+			mini_perror(MEM, NULL, 1);
+			exit(1);
+		}
+	}
+}
+
 int	mini_export(t_prompt *prompt, t_list *cmd, char **args)
 {
-	int		ij[2];
-	int		pos;
 	char	**argv;
+	int		i;
 
-	argv = ((t_mini *)prompt->cmds->content)->full_cmd; // argv = export with a argument.
-	if (ft_matrixlen(argv) >= 2)
+	argv = ((t_mini *)prompt->cmds->content)->full_cmd;
+	if (ft_strncmp(argv[0], "export", 6) == 0 && !argv[1])
+		print_envp(prompt->envp);
+	else
 	{
-		ij[0] = 1;
-		while (argv[ij[0]]) // ij[0] = 1 , this is the argument.
+		i = 1;
+		while (argv[i])
 		{
-			pos = var_in_envp(argv[ij[0]], prompt->envp, ij);
-			if (pos == 1) // the argument inside the env.
-			{
-				free(prompt->envp[ij[1]]);
-				prompt->envp[ij[1]] = ft_strdup(argv[ij[0]]);
-				{
-					if (!prompt->envp[ij[1]])
-					{
-						stop_fill(cmd, args, prompt->envp);
-						mini_perror(MEM, NULL, 1);
-						exit(1);
-					}
-				}
-			}
-			else if (!pos)
-			{
-				prompt->envp = ft_extend_matrix(prompt->envp, argv[ij[0]]);
-				if (!prompt->envp)
-				{
-					stop_fill(cmd, args, NULL);
-					mini_perror(MEM, NULL, 1);
-					exit(1);
-				}
-			}
-			ij[0]++;
+			update_env_var(prompt, cmd, args, argv[i]);
+			i++;
 		}
 	}
 	return (0);
 }
 
-int	mini_unset(t_prompt *prompt, t_list *cmd, char **args)
+static void mini_unset_util(int ij[2], t_prompt *prom, char **args, t_list *cmd)
+{
+	if (!ft_matrix_replace_in(&prom->envp, NULL, ij[1]))
+	{
+		stop_fill(cmd, args, prom->envp);
+		mini_perror(MEM, NULL, 1);
+		exit(1);
+	}
+}
+
+static void mini_unset_util_1(t_list *cmd, char **args, t_prompt *prom)
+{
+	stop_fill(cmd, args, prom->envp);
+	mini_perror(MEM, NULL, 1);
+	exit(1);
+}
+
+int	mini_unset(t_prompt *prom, t_list *cmd, char **args)
 {
 	char	**argv;
 	char	*aux;
 	int		ij[2];
 
 	ij[0] = 0;
-	argv = ((t_mini *)prompt->cmds->content)->full_cmd;
+	argv = ((t_mini *)prom->cmds->content)->full_cmd;
 	if (ft_matrixlen(argv) >= 2)
 	{
 		while (argv[++ij[0]])
@@ -178,23 +218,12 @@ int	mini_unset(t_prompt *prompt, t_list *cmd, char **args)
 			{
 				aux = ft_strjoin(argv[ij[0]], "=");
 				if (!aux)
-				{
-					stop_fill(cmd, args, prompt->envp);
-					mini_perror(MEM, NULL, 1);
-					exit(1);
-				}
+					mini_unset_util_1(cmd, args, prom);
 				free(argv[ij[0]]);
 				argv[ij[0]] = aux;
 			}
-			if (var_in_envp(argv[ij[0]], prompt->envp, ij))
-			{
-				if (!ft_matrix_replace_in(&prompt->envp, NULL, ij[1]))
-				{
-					stop_fill(cmd, args, prompt->envp);
-					mini_perror(MEM, NULL, 1);
-					exit(1);
-				}
-			}
+			if (var_in_envp(argv[ij[0]], prom->envp, ij))
+				mini_unset_util(ij, prom, args, cmd);
 		}
 	}
 	return (0);

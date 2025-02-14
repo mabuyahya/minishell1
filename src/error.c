@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 11:36:47 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/14 13:04:12 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	mini_exit(t_list *cmd, int *is_exit)
 // handle the command exit.
 {
 	t_mini	*node;
-	long	status[2];
+	long	exit_status[2];
 
 	node = cmd->content;
 	*is_exit = !cmd->next;
@@ -81,8 +81,8 @@ int	mini_exit(t_list *cmd, int *is_exit)
 		ft_putstr_fd("exit\n", 2);
 	if (!node->full_cmd || !node->full_cmd[1])
 		return (0);
-	status[1] = ft_atoi2(node->full_cmd[1], &status[0]);
-	if (status[1] == -1)
+	exit_status[1] = ft_atoi2(node->full_cmd[1], &exit_status[0]);
+	if (exit_status[1] == -1)
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(node->full_cmd[1], 2);
@@ -95,8 +95,8 @@ int	mini_exit(t_list *cmd, int *is_exit)
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
-	status[0] %= 256 + 256 * (status[0] < 0);
-	return (status[0]);
+	exit_status[0] = exit_status[0] % 256 + 256 * (exit_status[0] < 0);
+	return (exit_status[0]);
 }
 
 void	cd_error(char **str[2])

@@ -21,9 +21,8 @@ NAME = $(BIN)
 
 # Source Files
 SRC = main.c builtins.c ft_strtrim_all.c exec.c \
-      fill_node.c get_params.c ft_cmdtrim.c \
+      fill_node.c get_params.c handle_quote.c \
       expand.c heredoc.c error.c env.c custom_cmd.c \
-      prompt.c \
       ft_cmdsubsplit.c signal.c parse_args.c get_cmd.c \
       matrix_things.c utilities.c
 

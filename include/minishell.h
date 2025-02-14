@@ -38,6 +38,22 @@ typedef struct s_mini
 	int		outfile;
 }			t_mini;
 
+typedef struct s_expand_var
+{
+	char *aux;
+	int pos;
+	char *path;
+	char *var;
+}	t_expand_var;
+
+typedef struct s_set_env
+{
+	int		i;
+	char	*new_entry;
+	char	*equal_pos;
+	char	*add_equal;
+}	t_set_env;
+
 enum	e_mini_error
 {
 	QUOTE = 1,
@@ -53,6 +69,7 @@ enum	e_mini_error
 	NOT_DIR = 13
 };
 
+void	fail_allocate(t_prompt *prom, int flag);
 int	ft_strchr_i(const char *s, int c);
 char	**ft_matrix_replace_in(char ***big, char **small, int n);
 int	ft_isspace(char c);
@@ -73,11 +90,11 @@ int		mini_export(t_prompt *prompt, t_list *cmd, char **args);
 int		mini_unset(t_prompt *prompt, t_list *cmd, char **args);
 int		mini_exit(t_list *cmd, int *is_exit);
 void	*check_args(char *out, t_prompt *p);
-char	**ft_cmdtrim(char *s, char *set, t_prompt *p);
+char	**handle_quote(char *str, char *set, t_prompt *p);
 char	**ft_cmdsubsplit(char const *s, char *set);
 char	*ft_strtrim_all(char const *s1, int squote, int dquote);
 t_list	*fill_nodes(char **args, int i, t_prompt *p);
-int		get_fd(int oldfd, char *path, int flags[2]);
+// int		get_fd(int oldfd, char *path, int flags[2]);
 t_mini	*get_outfile1(t_mini *node, char **args, int *i);
 t_mini	*get_outfile2(t_mini *node, char **args, int *i);
 t_mini	*get_infile1(t_mini *node, char **args, int *i);
@@ -94,7 +111,7 @@ int		get_here_doc(char *str[2], char *aux[2]);
 void	*mini_perror(int err_type, char *param, int err);
 char	*mini_getenv(char	*var, char **envp, int n);
 char	**mini_setenv(char *var, char *value, char **envp, int n);
-char	*mini_getprompt(t_prompt prompt);
+// char	*mini_getprompt(t_prompt prompt);
 void	free_content(void *content);
 void	handle_sigint(int sig);
 void	handle_sigint_child(int sig);

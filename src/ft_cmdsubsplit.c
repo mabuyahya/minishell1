@@ -3,87 +3,82 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cmdsubsplit.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 18:23:56 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/13 17:24:59 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_count_words(char *s, char *set, int count)
+static int ft_count_words(char *s, char *set, int count)
 {
-	int		q[2];
-	int		i;
+    int i = 0;
+    int q[2] = {0, 0};
 
-	i = 0;
-	q[0] = 0;
-	q[1] = 0;
-	while (s && s[i] != '\0')
-	{
-		count++;
-		if (!ft_strchr(set, s[i]))
-		{
-			while ((!ft_strchr(set, s[i]) || q[0] || q[1]) && s[i] != '\0')
-			{
-				q[0] = (q[0] + (!q[1] && s[i] == '\'')) % 2;
-				q[1] = (q[1] + (!q[0] && s[i] == '\"')) % 2;
-				i++;
-			}
-			if (q[0] || q[1])
-				return (-1);
-		}
-		else
-			i++;
-	}
-	return (count);
+    while (s && s[i] != '\0')
+    {
+        count++;
+        if (!ft_strchr(set, s[i])) 
+        {
+            while ((!ft_strchr(set, s[i]) || q[0] || q[1]) && s[i] != '\0')
+            {
+                if (s[i] == '\'' && !q[1])
+					q[0] = !q[0];
+                if (s[i] == '\"' && !q[0])
+					q[1] = !q[1];
+                i++;
+            }
+            if (q[0] || q[1])
+				return (-1); 
+        }
+        else
+            i++;
+    }
+    return count;
 }
 
-static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
+static char **ft_fill_array(char **aux, char *s, char *set, int i[3])
 {
-	int		q[2];
+    int q[2] = {0, 0};
 
-	q[0] = 0;
-	q[1] = 0;
-	while (s && s[i[0]] != '\0')
-	{
-		i[1] = i[0];
-		if (!ft_strchr(set, s[i[0]]))
+    while (s && s[i[0]] != '\0')
+    {
+        i[1] = i[0];
+        if (!ft_strchr(set, s[i[0]]))
 		{
-			while ((!ft_strchr(set, s[i[0]]) || q[0] || q[1]) && s[i[0]])
-			{
-				q[0] = (q[0] + (!q[1] && s[i[0]] == '\'')) % 2;
-				q[1] = (q[1] + (!q[0] && s[i[0]] == '\"')) % 2;
-				i[0]++;
-			}
-		}
-		else
-			i[0]++;
-		aux[i[2]++] = ft_substr(s, i[1], i[0] - i[1]);
+            while (s[i[0]] && (!ft_strchr(set, s[i[0]]) || q[0] || q[1]))
+            {
+                if (s[i[0]] == '\'' && !q[1]) 
+					q[0] = !q[0];
+                if (s[i[0]] == '\"' && !q[0])
+					q[1] = !q[1];
+                i[0]++;
+            }
+        }
+        else
+            i[0]++;
+        aux[i[2]++] = ft_substr(s, i[1], i[0] - i[1]);
 	}
-	return (aux);
+    return aux;
 }
 
-char	**ft_cmdsubsplit(char const *s, char *set)
-// split the string in < > and |.
+char **ft_cmdsubsplit(char const *s, char *set)
 {
-	char	**aux;
-	int		nwords;
-	int		i[3];
+    char **words;
+    int count_word;
+    int i[3] = {0, 0, 0};
 
-	i[0] = 0;
-	i[1] = 0;
-	i[2] = 0;
-	if (!s)
+    if (!s)
 		return (NULL);
-	nwords = ft_count_words((char *)s, set, 0);
-	if (nwords == -1)
+    count_word = ft_count_words((char *)s, set, 0);
+    if (count_word == -1)
 		return (NULL);
-	aux = malloc((nwords + 1) * sizeof(char *));
-	if (aux == NULL)
+    words = malloc((count_word + 1) * sizeof(char *));
+    if (!words)
 		return (NULL);
-	aux = ft_fill_array(aux, (char *)s, set, i);
-	aux[nwords] = NULL;
-	return (aux);
+    words = ft_fill_array(words, (char *)s, set, i);
+    words[count_word] = NULL;
+    return (words);
 }

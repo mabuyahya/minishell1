@@ -10,6 +10,18 @@ int	ft_matrixlen(char **m)
 	return (i);
 }
 
+int		ft_extend_matrix_utils(int *i, char **in, char **out)
+{
+	out[*i] = ft_strdup(in[*i]);
+	if (!out[*i])
+	{
+		ft_free_matrix(&in);
+		ft_free_matrix(&out);
+		return (0);
+	}
+	return (1);
+}
+
 char	**ft_extend_matrix(char **in, char *newstr)
 {
 	char	**out;
@@ -26,15 +38,8 @@ char	**ft_extend_matrix(char **in, char *newstr)
 		return (NULL);
 	out[len + 1] = NULL;
 	while (++i < len)
-	{
-		out[i] = ft_strdup(in[i]);
-		if (!out[i])
-		{
-			ft_free_matrix(&in);
-			ft_free_matrix(&out);
+		if (!ft_extend_matrix_utils(&i, in, out))
 			return (NULL);
-		}
-	}
 	out[i] = ft_strdup(newstr);
 	if (!out[i])
 	{
@@ -64,27 +69,27 @@ void	ft_free_matrix(char ***m)
 
 char	**ft_dup_matrix(char **m)
 {
-	char	**out;
-	int		n_rows;
+	char	**str;
+	int		n;
 	int		i;
 
 	i = 0;
-	n_rows = ft_matrixlen(m);
-	out = malloc(sizeof(char *) * (n_rows + 1));
-	if (!out)
+	n = ft_matrixlen(m);
+	str = malloc(sizeof(char *) * (n + 1));
+	if (!str)
 		return (NULL);
 	while (m[i])
 	{
-		out[i] = ft_strdup(m[i]);
-		if (!out[i])
+		str[i] = ft_strdup(m[i]);
+		if (!str[i])
 		{
-			ft_free_matrix(&out);
+			ft_free_matrix(&str);
 			return (NULL);
 		}
 		i++;
 	}
-	out[i] = NULL;
-	return (out);
+	str[i] = NULL;
+	return (str);
 }
 
 int	ft_putmatrix_fd(char **m, int nl, int fd)
@@ -105,6 +110,34 @@ int	ft_putmatrix_fd(char **m, int nl, int fd)
 	return (count);
 }
 
+static char	**ft_copy_big_row(char **aux, char **big, int *i, int n)
+{
+	if (i[0] != n)
+	{
+		aux[++i[2]] = ft_strdup(big[i[0]]);
+		if (!aux[i[2]])
+		{
+			ft_free_matrix(&aux);
+			return (NULL);
+		}
+	}
+	return (aux);
+}
+
+static char	**ft_insert_small_rows(char **aux, char **small, int *i)
+{
+	while (small && small[++i[1]])
+	{
+		aux[++i[2]] = ft_strdup(small[i[1]]);
+		if (!aux[i[2]])
+		{
+			ft_free_matrix(&aux);
+			return (NULL);
+		}
+	}
+	return (aux);
+}
+
 char	**ft_matrix_replace_in(char ***big, char **small, int n)
 {
 	char	**aux;
@@ -116,31 +149,19 @@ char	**ft_matrix_replace_in(char ***big, char **small, int n)
 	if (!big || !*big || n < 0 || n >= ft_matrixlen(*big))
 		return (NULL);
 	aux = ft_calloc(ft_matrixlen(*big) + ft_matrixlen(small), sizeof(char *));
-	while (aux && big[0][++i[0]])
+	if (!aux)
+		return (NULL);
+	while (aux && (*big)[++i[0]])
 	{
 		if (i[0] != n)
-		{
-			aux[++i[2]] = ft_strdup(big[0][i[0]]);
-			if (!aux[i[2]])
-			{
-				ft_free_matrix(&aux);
-				return (NULL);
-			}
-		}
+			aux = ft_copy_big_row(aux, *big, i, n);
 		else
-		{
-			while (small && small[++i[1]])
-			{
-				aux[++i[2]] = ft_strdup(small[i[1]]);
-				if (!aux[i[2]])
-				{
-					ft_free_matrix(&aux);
-					return (NULL);
-				}
-			}
-		}
+			aux = ft_insert_small_rows(aux, small, i);
+		if (!aux)
+			return (NULL);
 	}
 	ft_free_matrix(big);
 	*big = aux;
 	return (*big);
 }
+

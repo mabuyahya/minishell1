@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/12 16:36:46 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/14 13:41:06 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,35 @@
 
 extern int	g_status;
 
-int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, char **args)
+static void not_builtin(t_prompt *prom, t_list *cmd, char **args)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	exec_cmd(prom, cmd, args);
+}
+
+int	builtin(t_prompt *prom, t_list *cmd, int *exit_num, char **args)
 // execute command, and check if the command built in.
 {
-	char	**a;
+	char	**str;
 	int 	n;
 
 	while (cmd)
 	{
-		a = ((t_mini *)cmd->content)->full_cmd;
+		str = ((t_mini *)cmd->content)->full_cmd;
 		n = 0;
-		if (a)
-			n = ft_strlen(*a);
-		if (a && !ft_strncmp(*a, "exit", n) && n == 4)
-			g_status = mini_exit(cmd, is_exit);
-		else if (!cmd->next && a && !ft_strncmp(*a, "cd", n) && n == 2)
-			g_status = mini_cd(prompt, cmd, args);
-		else if (!cmd->next && a && !ft_strncmp(*a, "export", n) && n == 6)
-			g_status = mini_export(prompt, cmd, args);
-		else if (!cmd->next && a && !ft_strncmp(*a, "unset", n) && n == 5)
-			g_status = mini_unset(prompt, cmd, args);
+		if (str)
+			n = ft_strlen(*str);
+		if (str && !ft_strncmp(*str, "exit", n) && n == 4)
+			g_status = mini_exit(cmd, exit_num);
+		else if (!cmd->next && str && !ft_strncmp(*str, "cd", n) && n == 2)
+			g_status = mini_cd(prom, cmd, args);
+		else if (!cmd->next && str && !ft_strncmp(*str, "export", n) && n == 6)
+			g_status = mini_export(prom, cmd, args);
+		else if (!cmd->next && str && !ft_strncmp(*str, "unset", n) && n == 5)
+			g_status = mini_unset(prom, cmd, args);
 		else
-		{
-			signal(SIGINT, SIG_IGN);
-			signal(SIGQUIT, SIG_IGN);
-			exec_cmd(prompt, cmd, args);
-		}
+			not_builtin(prom, cmd, args);
 		cmd = cmd->next;
 	}
 	return (g_status);
@@ -81,45 +84,23 @@ static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
 	return (NULL);
 }
 
-int	mini_cd(t_prompt *p, t_list *cmd, char **args)
-// handle the command cd.
+static void		stop_solution(t_list *cmd, t_prompt *prom, char **args, char ***str)
 {
-	char	**str[2];
+	ft_free_matrix(&str[0]);
+	stop_fill(cmd, args, prom->envp);
+	mini_perror(MEM, NULL, 1);
+	exit(1);	
+}
+
+static void	handle_cd_paths(t_list *cmd, t_prompt *p, char **args, char **str[2])
+{
 	char	*aux;
 
-	g_status = 0;
-	str[0] = ((t_mini *)p->cmds->content)->full_cmd;
-	aux = mini_getenv("HOME", p->envp, 4);
-	if (!aux)
-	{
-		aux = ft_strdup("");
-		if (!aux)
-		{
-			ft_free_matrix(&str[0]);
-			stop_fill(cmd, args, p->envp);
-			mini_perror(MEM, NULL, 1);
-			exit(1);
-		}
-	}
-	str[1] = ft_extend_matrix(NULL, aux);
-	free(aux);
-	if (!str[1])
-	{
-		ft_free_matrix(&str[0]);
-		stop_fill(cmd, args, p->envp);
-		mini_perror(MEM, NULL, 1);
-		exit(1);
-	}
 	aux = getcwd(NULL, 0);
 	str[1] = ft_extend_matrix(str[1], aux);
 	free(aux);
 	if (!str[1])
-	{
-		ft_free_matrix(&str[0]);
-		stop_fill(cmd, args, p->envp);
-		mini_perror(MEM, NULL, 1);
-		exit(1);
-	}
+		stop_solution(cmd, p, args, str);
 	cd_error(str);
 	if (!g_status)
 		p->envp = mini_setenv("OLDPWD", str[1][1], p->envp, 6);
@@ -128,23 +109,35 @@ int	mini_cd(t_prompt *p, t_list *cmd, char **args)
 	{
 		aux = ft_strdup("");
 		if (!aux)
-		{
-			ft_free_matrix(&str[0]);
-			stop_fill(cmd, args, p->envp);
-			mini_perror(MEM, NULL, 1);
-			exit(1);
-		}
+			stop_solution(cmd, p, args, str);
 	}
 	str[1] = ft_extend_matrix(str[1], aux);
 	free(aux);
 	if (!str[1])
-	{
-		ft_free_matrix(&str[0]);
-		stop_fill(cmd, args, p->envp);
-		mini_perror(MEM, NULL, 1);
-		exit(1);
-	}
+		stop_solution(cmd, p, args, str);
 	p->envp = mini_setenv("PWD", str[1][2], p->envp, 3);
+}
+
+int	mini_cd(t_prompt *prom, t_list *cmd, char **args)
+// handle command cd.
+{
+	char	**str[2];
+	char	*aux;
+
+	g_status = 0;
+	str[0] = ((t_mini *)prom->cmds->content)->full_cmd;
+	aux = mini_getenv("HOME", prom->envp, 4);
+	if (!aux)
+	{
+		aux = ft_strdup("");
+		if (!aux)
+			stop_solution(cmd, prom, args, str);
+	}
+	str[1] = ft_extend_matrix(NULL, aux);
+	free(aux);
+	if (!str[1])
+		stop_solution(cmd, prom, args, str);
+	handle_cd_paths(cmd, prom, args, str);
 	ft_free_matrix(&str[1]);
 	return (g_status);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim_all.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 20:59:58 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/13 17:32:06 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ static int	malloc_len(char const *s1)
 	squote = 0;
 	while (s1 && s1[i])
 	{
-		squote = (squote + (!dquote && s1[i] == '\'')) % 2;
-		dquote = (dquote + (!squote && s1[i] == '\"')) % 2;
+		if (!dquote && s1[i] == '\'')
+	    	squote = !squote;
+		if (!squote && s1[i] == '\"')
+		    dquote = !dquote;
 		if ((s1[i] == '\"' && !squote) || (s1[i] == '\'' && !dquote))
 			count++;
 		i++;
@@ -53,8 +55,10 @@ char	*ft_strtrim_all(char const *s1, int squote, int dquote)
 		return (NULL);
 	while (s1[i[0]])
 	{
-		squote = (squote + (!dquote && s1[i[0]] == '\'')) % 2;
-		dquote = (dquote + (!squote && s1[i[0]] == '\"')) % 2;
+		if (!dquote && s1[i[0]] == '\'')
+	    	squote = !squote;
+		if (!squote && s1[i[0]] == '\"')
+		    dquote = !dquote;
 		if ((s1[i[0]] != '\"' || squote) && (s1[i[0]] != '\'' || dquote) \
 			&& ++i[1] >= 0)
 			trimmed[i[1]] = s1[i[0]];

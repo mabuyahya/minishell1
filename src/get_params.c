@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_params.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:48:14 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/14 12:53:43 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 extern int	g_status;
 
-int	get_fd(int oldfd, char *path, int flags[2])
+static int	get_fd(int old_file, char *path, int flags[2])
 {
 	int	fd;
 
-	if (oldfd > 2)
-		close(oldfd);
+	if (old_file > 2)
+		close(old_file);
 	if (!path)
 		return (-1);
 	if (access(path, F_OK) == -1 && !flags[0])
@@ -32,10 +32,10 @@ int	get_fd(int oldfd, char *path, int flags[2])
 		fd = open(path, O_CREAT | O_WRONLY | O_APPEND, 0666);
 	else if (flags[0] && !flags[1]) // >
 		fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0666);
-	else if (!flags[0] && oldfd != -1)
+	else if (!flags[0] && old_file != -1)
 		fd = open(path, O_RDONLY);
 	else
-		fd = oldfd;
+		fd = old_file;
 	return (fd);
 }
 

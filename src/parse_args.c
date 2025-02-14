@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/12 16:41:18 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/14 12:34:28 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,63 +14,55 @@
 
 extern int	g_status;
 
-static char	**split_all(char **args, t_prompt *prompt)
+static void handle_fail(t_prompt *prom, char **args, char **str)
+{
+	ft_free_matrix(&prom->envp);
+	if (args && args[0])
+		ft_free_matrix(&args);
+	if (str && str[0])
+		ft_free_matrix(&str);
+	mini_perror(MEM, NULL, 1);
+	exit(1);
+}
+
+static char	**expand(char **args, t_prompt *prom)
 // remove and handle single double quotes and $ ~.
 {
-	char	**subsplit;
+	char	**str;
 	int		i;
 	int		quotes[2];
 
 	i = -1;
 	while (args && args[++i])
 	{
-		args[i] = expand_vars(args[i], -1, quotes, prompt, args);
+		args[i] = expand_vars(args[i], -1, quotes, prom, args);
 		args[i] = expand_path(args[i], -1, quotes,
-			mini_getenv("HOME", prompt->envp, 4));
+			mini_getenv("HOME", prom->envp, 4));
 		if (!args[i])
-		{
-			ft_free_matrix(&args);
-			ft_free_matrix(&prompt->envp);
-			if (subsplit)
-				ft_free_matrix(&subsplit);
-			mini_perror(MEM, NULL, 1);
-			exit(1);
-		}
-		subsplit = ft_cmdsubsplit(args[i], "<|>");
-		if (!subsplit)
-		{
-			ft_free_matrix(&args);
-			ft_free_matrix(&prompt->envp);
-			mini_perror(MEM, NULL, 1);
-			exit(1);
-		}
-		if (!ft_matrix_replace_in(&args, subsplit, i))
-		{
-			ft_free_matrix(&args);
-			ft_free_matrix(&prompt->envp);
-			if (subsplit)
-				ft_free_matrix(&subsplit);
-			mini_perror(MEM, NULL, 1);
-			exit(1);
-		}
-		i = i + ft_matrixlen(subsplit) - 1;
-		ft_free_matrix(&subsplit);
+			handle_fail(prom, args, str);
+		str = ft_cmdsubsplit(args[i], "<|>");
+		if (!str)
+			handle_fail(prom, args, NULL);
+		if (!ft_matrix_replace_in(&args, str, i))
+			handle_fail(prom, args, str);
+		i = i + ft_matrixlen(str) - 1;
+		ft_free_matrix(&str);
 	}
 	return (args);
 }
 
-static void	*parse_args(char **args, t_prompt *p)
+static void	*parse_args(char **args, t_prompt *prom)
 // waitpid(-1, NULL, NULL) : to wait any chiled process.
 {
 	int	is_exit;
 	int	i;
 
 	is_exit = 0;
-	p->cmds = fill_nodes(split_all(args, p), -1, p);
-	if (!p->cmds)
-		return (p);
-	i = ft_lstsize(p->cmds);
-	g_status = builtin(p, p->cmds, &is_exit, args);
+	prom->cmds = fill_nodes(expand(args, prom), -1, prom);
+	if (!prom->cmds)
+		return (prom);
+	i = ft_lstsize(prom->cmds);
+	g_status = builtin(prom, prom->cmds, &is_exit, args);
 	while (i-- > 0)
 		waitpid(-1, &g_status, 0);
 	if (!is_exit && g_status == 13)
@@ -79,10 +71,10 @@ static void	*parse_args(char **args, t_prompt *p)
 		g_status = g_status / 255;
 	if (args && is_exit)
 	{
-		ft_lstclear(&p->cmds, free_content);
+		ft_lstclear(&prom->cmds, free_content);
 		return (NULL);
 	}
-	return (p);
+	return (prom);
 }
 
 int	is_numeric(char *str)
@@ -102,33 +94,33 @@ int	is_numeric(char *str)
 	return (1);
 }
 
-void	*check_args(char *out, t_prompt *p)
+void	*check_args(char *read, t_prompt *prom)
 // all solution.
 {
-	char	**a;
-	t_mini	*n;
+	char	**str;
+	t_mini	*node;
 
-	if (!out)
+	if (!read)
 	{
 		printf("exit\n");
 		return (NULL);
 	}
-	if (out[0] != '\0')
-		add_history(out);
-	a = ft_cmdtrim(out, " ", p);
-	if (out)
-		free(out);
-	if (!a)
+	if (read[0] != '\0')
+		add_history(read);
+	str = handle_quote(read, " ", prom);
+	if (read)
+		free(read);
+	if (!str)
 		mini_perror(QUOTE, NULL, 1);
-	if (!a)
+	if (!str)
 		return ("");
-	p = parse_args(a, p);
-	if (p && p->cmds)
-		n = p->cmds->content;
-	if (p && p->cmds && n && n->full_cmd && ft_lstsize(p->cmds) == 1)
-		p->envp = mini_setenv("_", n->full_cmd[ft_matrixlen(n->full_cmd) - 1],
-			p->envp, 1);
-	if (p && p->cmds)
-		ft_lstclear(&p->cmds, free_content);
-	return (p);
+	prom = parse_args(str, prom);
+	if (prom && prom->cmds)
+		node = prom->cmds->content;
+	if (prom && prom->cmds && node && node->full_cmd && ft_lstsize(prom->cmds) == 1)
+		prom->envp = mini_setenv("_", node->full_cmd[ft_matrixlen(node->full_cmd) - 1],
+			prom->envp, 1);
+	if (prom && prom->cmds)
+		ft_lstclear(&prom->cmds, free_content);
+	return (prom);
 }
