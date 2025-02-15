@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 19:07:19 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 19:35:52 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,10 @@ enum		e_mini_error
 	NOT_DIR = 13
 };
 
+// what the hell
+char		*ft_strndup(const char *s, int n);
+char		*ft_strncpy(char *dest, const char *src, int n);
+char		*ft_strcat(char *dest, const char *src);
 // get_next_line_utils.c
 size_t		gnl_strlen(const char *s);
 char		*gnl_substr(char const *s, unsigned int start, size_t len);

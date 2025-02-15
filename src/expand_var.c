@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_var.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:51:42 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 19:00:26 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 19:33:56 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ extern int	g_status;
 static void	expand_variable_util(t_expand_read_2 *var,
 	char *line, int prefix_len)
 {
-	strncpy(var->expanded, line, prefix_len); ///
+	ft_strncpy(var->expanded, line, prefix_len);
 	var->expanded[prefix_len] = '\0';
-	strcat(var->expanded, var->env_value); ///
+	ft_strcat(var->expanded, var->env_value);
 	free(var->env_value);
-	strcat(var->expanded, var->key_eend); ///
+	strcat(var->expanded, var->key_eend);
 	free(line);
 }
 
@@ -35,7 +35,7 @@ static char	*expand_variable(char *line, char *key_start, t_prompt *main)
 	while (*var.key_eend && (ft_isalnum(*var.key_eend) || *var.key_eend == '?'))
 		var.key_eend++;
 	var.len = var.key_eend - key_start;
-	var.key = strndup(key_start, var.len); ///
+	var.key = ft_strndup(key_start, var.len);
 	if (!var.key)
 		return (line);
 	var.env_value = mini_getenv(var.key, main->envp, -1);

@@ -45,6 +45,7 @@ SRC = builtins.c \
 	utils_2.c \
 	mini_unset.c \
 	mini_export.c \
+	utils_3.c \
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
