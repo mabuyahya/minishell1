@@ -26,9 +26,9 @@ static int	malloc_len(char const *s1)
 	while (s1 && s1[i])
 	{
 		if (!dquote && s1[i] == '\'')
-	    	squote = !squote;
+			squote = !squote;
 		if (!squote && s1[i] == '\"')
-		    dquote = !dquote;
+			dquote = !dquote;
 		if ((s1[i] == '\"' && !squote) || (s1[i] == '\'' && !dquote))
 			count++;
 		i++;
@@ -41,9 +41,9 @@ static int	malloc_len(char const *s1)
 char	*ft_strtrim_all(char const *s1, int squote, int dquote)
 // return the string without ' and ".
 {
-	int		count;
-	int		i[2];
-	char	*trimmed;
+	int count;
+	int i[2];
+	char *trimmed;
 
 	i[1] = -1;
 	i[0] = 0;
@@ -56,11 +56,11 @@ char	*ft_strtrim_all(char const *s1, int squote, int dquote)
 	while (s1[i[0]])
 	{
 		if (!dquote && s1[i[0]] == '\'')
-	    	squote = !squote;
+			squote = !squote;
 		if (!squote && s1[i[0]] == '\"')
-		    dquote = !dquote;
-		if ((s1[i[0]] != '\"' || squote) && (s1[i[0]] != '\'' || dquote) \
-			&& ++i[1] >= 0)
+			dquote = !dquote;
+		if ((s1[i[0]] != '\"' || squote) && (s1[i[0]] != '\'' || dquote)
+				&& ++i[1] >= 0)
 			trimmed[i[1]] = s1[i[0]];
 		i[0]++;
 	}

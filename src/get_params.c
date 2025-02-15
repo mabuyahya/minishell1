@@ -42,8 +42,8 @@ static int	get_fd(int old_file, char *path, int flags[2])
 t_mini	*get_outfile1(t_mini *node, char **args, int *i)
 // >
 {
-	char	*nl;
-	int		flags[2];
+	char *nl;
+	int flags[2];
 
 	flags[0] = 1;
 	flags[1] = 0;
@@ -70,8 +70,8 @@ t_mini	*get_outfile2(t_mini *node, char **args, int *i)
 // node = content.
 // >>
 {
-	char	*nl;
-	int		flags[2];
+	char *nl;
+	int flags[2];
 
 	flags[0] = 1;
 	flags[1] = 1;
@@ -96,8 +96,8 @@ t_mini	*get_outfile2(t_mini *node, char **args, int *i)
 t_mini	*get_infile1(t_mini *node, char **args, int *i)
 // for infile.
 {
-	char	*nl;
-	int		flags[2];
+	char *nl;
+	int flags[2];
 
 	flags[0] = 0;
 	flags[1] = 0;
@@ -122,9 +122,9 @@ t_mini	*get_infile1(t_mini *node, char **args, int *i)
 t_mini	*get_infile2(t_mini *node, char **args, int *i)
 // for heardoc.
 {
-	char	*aux[2];
-	char	*nl;
-	char	*str[2];
+	char *aux[2];
+	char *nl;
+	char *str[2];
 
 	str[0] = NULL;
 	str[1] = NULL;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix_things.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/15 17:33:31 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/15 17:33:31 by sbibers          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_matrixlen(char **m)
@@ -10,7 +22,7 @@ int	ft_matrixlen(char **m)
 	return (i);
 }
 
-int		ft_extend_matrix_utils(int *i, char **in, char **out)
+int	ft_extend_matrix_utils(int *i, char **in, char **out)
 {
 	out[*i] = ft_strdup(in[*i]);
 	if (!out[*i])
@@ -44,7 +56,7 @@ char	**ft_extend_matrix(char **in, char *newstr)
 	if (!out[i])
 	{
 		ft_free_matrix(&in);
-		return (NULL);	
+		return (NULL);
 	}
 	ft_free_matrix(&in);
 	return (out);
@@ -164,4 +176,3 @@ char	**ft_matrix_replace_in(char ***big, char **small, int n)
 	*big = aux;
 	return (*big);
 }
-

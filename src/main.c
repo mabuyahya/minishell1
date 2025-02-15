@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 14:15:21 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/15 16:50:52 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int	g_status;
 
-void fail_allocate(t_prompt *prom, int flag)
+void	fail_allocate(t_prompt *prom, int flag)
 {
 	ft_free_matrix(&prom->envp);
 	mini_perror(flag, NULL, 1);
@@ -25,7 +25,7 @@ static void	mini_getpid(t_prompt *prom)
 // get process id to handle $$.
 // get parant pid.  = (child - 1).
 {
-	pid_t	pid;
+	pid_t pid;
 
 	pid = fork();
 	if (pid < 0)
@@ -43,12 +43,11 @@ static void	mini_getpid(t_prompt *prom)
 	prom->pid = pid - 1;
 }
 
-
 static void	init_vars(t_prompt *prom, char *str, char **argv)
 // init variables and get the path of the minishell.
 // SHILVL : how much shell open.
 {
-	char	*sstr;
+	char *sstr;
 
 	str = getcwd(NULL, 0);
 	prom->envp = mini_setenv("PWD", str, prom->envp, 3);
@@ -65,8 +64,9 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 	free(sstr);
 	str = mini_getenv("PATH", prom->envp, 4);
 	if (!str)
-		prom->envp = mini_setenv("PATH", 
-		"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin", prom->envp, 4);
+		prom->envp = mini_setenv("PATH",
+									"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin",
+									prom->envp, 4);
 	free(str);
 	str = mini_getenv("_", prom->envp, 1);
 	if (!str)
@@ -77,7 +77,7 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 // init env and all the struct.
 {
-	char		*str;
+	char *str;
 
 	str = NULL;
 	prom->cmds = NULL;
@@ -95,20 +95,18 @@ static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char				*read;
-	t_prompt			prom;
+	char		*read;
+	t_prompt	prom;
 
-	(void)(argc);
 	(void)(argv);
 	init_prompt(&prom, argv, envp);
-	while (1)
+	while (argc)
 	{
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		read = readline("sbibers $>");
 		if (!check_args(read, &prom))
 		{
-			free(read);
 			ft_free_matrix(&prom.envp);
 			clear_history();
 			exit(g_status);

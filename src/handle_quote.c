@@ -15,9 +15,9 @@
 static int	ft_count_words(const char *s, char *seo)
 // count the wrod by space and ' and "
 {
-	int		count;
-	int		i;
-	char	quote;
+	int count;
+	int i;
+	char quote;
 
 	i = 0;
 	count = 0;
@@ -38,59 +38,59 @@ static int	ft_count_words(const char *s, char *seo)
 		}
 	}
 	if (quote)
-	    return (-1);
-	return count;
+		return (-1);
+	return (count);
 }
 
-static void handle_allocation_failure(char **array, t_prompt *prom)
+static void	handle_allocation_failure(char **array, t_prompt *prom)
 {
-    ft_free_matrix(&array);
-    fail_allocate(prom, MEM);
+	ft_free_matrix(&array);
+	fail_allocate(prom, MEM);
 }
 
-static void update_quotes(char *s, int *i, char *quote)
+static void	update_quotes(char *s, int *i, char *quote)
 {
 	if (!*quote && (s[*i] == '\'' || s[*i] == '"'))
-	    *quote = s[*i];
+		*quote = s[*i];
 	else if (*quote && s[*i] == *quote)
-	    *quote = 0;
+		*quote = 0;
 	(*i)++;
 }
 
-static char **ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
+static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 // split word by ' "
 {
-    int i;
+	int i;
 	int start;
 	int word;
-    char quote;
+	char quote;
 
-    i = 0;
+	i = 0;
 	word = 0;
 	quote = 0;
-    while (s[i])
-    {
-        while (s[i] && ft_strchr(sep, s[i]))
-            i++;
-        start = i;
-        while (s[i] && (!ft_strchr(sep, s[i]) || quote))
-            update_quotes(s, &i, &quote);
-        if (start < i)
-        {
-            array[word] = ft_substr(s, start, i - start);
+	while (s[i])
+	{
+		while (s[i] && ft_strchr(sep, s[i]))
+			i++;
+		start = i;
+		while (s[i] && (!ft_strchr(sep, s[i]) || quote))
+			update_quotes(s, &i, &quote);
+		if (start < i)
+		{
+			array[word] = ft_substr(s, start, i - start);
 			if (!array[word++])
-                handle_allocation_failure(array, prom);
-        }
-    }
-    array[word] = NULL;
-    return (array);
+				handle_allocation_failure(array, prom);
+		}
+	}
+	array[word] = NULL;
+	return (array);
 }
 
 char	**handle_quote(char *str, char *sep, t_prompt *prom)
 // split the command by spaces and ' and ".
 {
-	char	**array;
-	int		words;
+	char **array;
+	int words;
 
 	if (!str)
 		return (NULL);

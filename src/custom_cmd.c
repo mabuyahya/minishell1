@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 18:53:59 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/10 18:46:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 17:00:42 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	exec_custom(char ***out, char *full, char *args, char **envp)
 		close(fd[WRITE_END]);
 		if (!access(full, F_OK))
 			execve(full, matrix, envp);
-		exit (1);
+		exit(1);
 	}
 	close(fd[WRITE_END]);
 	waitpid(pid, NULL, 0);

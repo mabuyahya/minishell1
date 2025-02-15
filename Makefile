@@ -20,11 +20,30 @@ BIN = minishell
 NAME = $(BIN)
 
 # Source Files
-SRC = main.c builtins.c ft_strtrim_all.c exec.c \
-      fill_node.c get_params.c handle_quote.c \
-      expand.c heredoc.c error.c env.c custom_cmd.c \
-      ft_cmdsubsplit.c signal.c parse_args.c get_cmd.c \
-      matrix_things.c utilities.c
+SRC = builtins.c \
+	custom_cmd.c \
+	env.c \
+	error.c \
+	exec.c \
+	expand_path.c \
+	expand_var.c \
+	fill_node_util.c \
+	ft_cmdsubsplit.c \
+	ft_strtrim_all.c \
+	get_cmd.c \
+	get_params.c \
+	handle_quote.c \
+	heredoc.c \
+	main.c \
+	matrix_things.c \
+	parse_args.c \
+	signal.c \
+	utilities.c \
+	fill_creat_node.c \
+	handle_echo_pwd_cd.c \
+	utils_2.c \
+	mini_unset.c \
+	mini_export.c \
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
