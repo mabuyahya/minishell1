@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/15 17:08:06 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:38:24 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ char	*expand_path(char *str, int i, int quotes[2], char *var)
 	while (str && str[++i])
 	{
 		update_quotes(str[i], quotes);
-		if (!quotes[0] && !quotes[1] && str[i] == '~' && (i == 0 || str[i
-				- 1] != '$'))
+		if (!quotes[0] && !quotes[1] && str[i] == '~'
+			&& (i == 0 || str[i - 1] != '$'))
 		{
 			aux = ft_substr(str, 0, i);
 			path = ft_strjoin(aux, var);

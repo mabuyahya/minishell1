@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 17:22:22 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:47:15 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ static void	handle_fail_expand(t_prompt *prom, char **args, char **str)
 	exit(1);
 }
 
-static char	**expand(char **args, t_prompt *prom)
 // remove and handle single double quotes and $ ~.
+static char	**expand(char **args, t_prompt *prom)
 {
-	char **str;
-	int i;
-	int quotes[2];
+	char	**str;
+	int		i;
+	int		quotes[2];
 
 	i = -1;
 	while (args && args[++i])
@@ -50,11 +50,11 @@ static char	**expand(char **args, t_prompt *prom)
 	return (args);
 }
 
-static void	*parse_args(char **args, t_prompt *prom)
 // waitpid(-1, NULL, NULL) : to wait any chiled process.
+static void	*parse_args(char **args, t_prompt *prom)
 {
-	int is_exit;
-	int i;
+	int	is_exit;
+	int	i;
 
 	is_exit = 0;
 	prom->cmds = fill_nodes(expand(args, prom), -1, prom);
@@ -89,8 +89,8 @@ void	check_args_util(t_prompt *prom, t_mini *node)
 		ft_lstclear(&prom->cmds, free_content);
 }
 
-void	*check_args(char *read, t_prompt *prom)
 // all solution.
+void	*check_args(char *read, t_prompt *prom)
 {
 	char	**str;
 	t_mini	*node;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fill_node.c                                        :+:      :+:    :+:   */
+/*   fill_node_util.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 17:05:01 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 17:12:28 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:37:26 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ t_mini	*mini_init(void)
 	return (mini);
 }
 
-t_mini	*get_params(t_mini *node, char **str[2], int *i)
 // put infile and outfile for every command.
 // put the command in the content of the node.
 // str[0] : with single and double quotes.
 // str[1] = without single and double quotes.
+t_mini	*get_params(t_mini *node, char **str[2], int *i)
 {
 	if (str[0][*i])
 	{

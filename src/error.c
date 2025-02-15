@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 11:36:47 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/14 13:04:12 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/15 19:04:24 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int	ft_atoi2(const char *nptr, long *nbr)
 int	mini_exit(t_list *cmd, int *is_exit)
 // handle the command exit.
 {
-	t_mini *node;
-	long exit_status[2];
+	t_mini	*node;
+	long	exit_status[2];
 
 	node = cmd->content;
 	*is_exit = !cmd->next;
@@ -102,7 +102,7 @@ int	mini_exit(t_list *cmd, int *is_exit)
 void	cd_error(char **str[2])
 // handle cd.
 {
-	DIR *dir;
+	DIR	*dir;
 
 	dir = NULL;
 	if (str[0][1])
@@ -127,7 +127,7 @@ void	cd_error(char **str[2])
 void	free_content(void *content)
 // free the content of the node(full_cmd, full_path).
 {
-	t_mini *node;
+	t_mini	*node;
 
 	node = content;
 	ft_free_matrix(&node->full_cmd);

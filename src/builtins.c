@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 17:21:16 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 19:06:02 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static void	not_builtin(t_prompt *prom, t_list *cmd)
 int	builtin(t_prompt *prom, t_list *cmd, int *exit_num, char **args)
 // execute command, and check if the command built in.
 {
-	char **str;
-	int n;
+	char	**str;
+	int		n;
 
 	while (cmd)
 	{
@@ -51,7 +51,7 @@ int	builtin(t_prompt *prom, t_list *cmd, int *exit_num, char **args)
 int	is_builtin(t_mini *n)
 // check if the command built in or not.
 {
-	int l;
+	int	l;
 
 	if (!n->full_cmd)
 		return (0);

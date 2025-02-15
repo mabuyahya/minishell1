@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cmdtrim.c                                       :+:      :+:    :+:   */
+/*   handle_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/13 13:53:15 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/15 18:33:32 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static int	ft_count_words(const char *s, char *seo)
 // count the wrod by space and ' and "
 {
-	int count;
-	int i;
-	char quote;
+	int		count;
+	int		i;
+	char	quote;
 
 	i = 0;
 	count = 0;
@@ -60,10 +60,10 @@ static void	update_quotes(char *s, int *i, char *quote)
 static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 // split word by ' "
 {
-	int i;
-	int start;
-	int word;
-	char quote;
+	int		i;
+	int		start;
+	int		word;
+	char	quote;
 
 	i = 0;
 	word = 0;
@@ -89,8 +89,8 @@ static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 char	**handle_quote(char *str, char *sep, t_prompt *prom)
 // split the command by spaces and ' and ".
 {
-	char **array;
-	int words;
+	char	**array;
+	int		words;
 
 	if (!str)
 		return (NULL);

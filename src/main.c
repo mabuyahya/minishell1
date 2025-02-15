@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 16:50:52 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:58:02 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	fail_allocate(t_prompt *prom, int flag)
 	exit(1);
 }
 
-static void	mini_getpid(t_prompt *prom)
 // get process id to handle $$.
 // get parant pid.  = (child - 1).
+static void	mini_getpid(t_prompt *prom)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid < 0)
@@ -43,11 +43,11 @@ static void	mini_getpid(t_prompt *prom)
 	prom->pid = pid - 1;
 }
 
-static void	init_vars(t_prompt *prom, char *str, char **argv)
 // init variables and get the path of the minishell.
 // SHILVL : how much shell open.
+static void	init_vars(t_prompt *prom, char *str, char **argv)
 {
-	char *sstr;
+	char	*sstr;
 
 	str = getcwd(NULL, 0);
 	prom->envp = mini_setenv("PWD", str, prom->envp, 3);
@@ -65,8 +65,8 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 	str = mini_getenv("PATH", prom->envp, 4);
 	if (!str)
 		prom->envp = mini_setenv("PATH",
-									"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin",
-									prom->envp, 4);
+				"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin",
+				prom->envp, 4);
 	free(str);
 	str = mini_getenv("_", prom->envp, 1);
 	if (!str)
@@ -74,10 +74,10 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 	free(str);
 }
 
-static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 // init env and all the struct.
+static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 {
-	char *str;
+	char	*str;
 
 	str = NULL;
 	prom->cmds = NULL;

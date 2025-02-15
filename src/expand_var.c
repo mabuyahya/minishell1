@@ -6,15 +6,16 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:51:42 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 16:53:58 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 19:00:26 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int g_status;
+extern int	g_status;
 
-static void	expand_variable_util(t_expand_read_2 *var, char *line, int prefix_len)
+static void	expand_variable_util(t_expand_read_2 *var,
+	char *line, int prefix_len)
 {
 	strncpy(var->expanded, line, prefix_len); ///
 	var->expanded[prefix_len] = '\0';

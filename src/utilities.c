@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:41:00 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/15 16:56:38 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:59:56 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ int	ft_countchar(char *s, char c)
 	return (count);
 }
 
-int	ft_strchr_i(const char *s, int c)
 // take one string with char.
+int	ft_strchr_i(const char *s, int c)
 {
-	unsigned char c_unsigned;
-	int i;
+	unsigned char	c_unsigned;
+	int				i;
 
 	i = 0;
 	if (!s)
@@ -49,10 +49,10 @@ int	ft_strchr_i(const char *s, int c)
 	return (-1);
 }
 
-int	ft_strchars_i(const char *s, char *set)
 // take two string.
+int	ft_strchars_i(const char *s, char *set)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!s)

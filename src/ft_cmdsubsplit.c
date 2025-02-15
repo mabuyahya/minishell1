@@ -6,38 +6,36 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 18:23:56 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 16:48:54 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:36:54 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_count_words(char *s, char *set, int count)
+static int	ft_count_words(char *s, char *set, int count, int *j)
 {
-	int	i;
 	int	q[2];
 
-	i = 0;
 	q[0] = 0;
 	q[1] = 0;
-	while (s && s[i] != '\0')
+	while (s && s[*j] != '\0')
 	{
 		count++;
-		if (!ft_strchr(set, s[i]))
+		if (!ft_strchr(set, s[*j]))
 		{
-			while ((!ft_strchr(set, s[i]) || q[0] || q[1]) && s[i] != '\0')
+			while ((!ft_strchr(set, s[*j]) || q[0] || q[1]) && s[*j] != '\0')
 			{
-				if (s[i] == '\'' && !q[1])
+				if (s[*j] == '\'' && !q[1])
 					q[0] = !q[0];
-				if (s[i] == '\"' && !q[0])
+				if (s[*j] == '\"' && !q[0])
 					q[1] = !q[1];
-				i++;
+				(*j)++;
 			}
 			if (q[0] || q[1])
 				return (-1);
 		}
 		else
-			i++;
+			(*j)++;
 	}
 	return (count);
 }
@@ -74,13 +72,15 @@ char	**ft_cmdsubsplit(char const *s, char *set)
 	char	**words;
 	int		count_word;
 	int		i[3];
+	int		j;
 
+	j = 0;
 	i[0] = 0;
 	i[1] = 0;
 	i[2] = 0;
 	if (!s)
 		return (NULL);
-	count_word = ft_count_words((char *)s, set, 0);
+	count_word = ft_count_words((char *)s, set, 0, &j);
 	if (count_word == -1)
 		return (NULL);
 	words = malloc((count_word + 1) * sizeof(char *));

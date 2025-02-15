@@ -6,21 +6,21 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:15:34 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 17:22:27 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:44:27 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int g_status;
+extern int	g_status;
 
 int	mini_echo(t_list *cmd)
 // handle echo.
 {
-	int newline;
-	int i[2];
-	char **argv;
-	t_mini *node;
+	int		newline;
+	int		i[2];
+	char	**argv;
+	t_mini	*node;
 
 	i[0] = 0;
 	i[1] = 0;
@@ -29,9 +29,9 @@ int	mini_echo(t_list *cmd)
 	argv = node->full_cmd;
 	while (argv && argv[++i[0]])
 	{
-		if (!i[1] && !ft_strncmp(argv[i[0]], "-n", 2) &&
-			(ft_countchar(argv[i[0]], 'n') ==
-				(int)(ft_strlen(argv[i[0]]) - 1)))
+		if (!i[1] && !ft_strncmp(argv[i[0]], "-n", 2)
+			&& (ft_countchar(argv[i[0]], 'n')
+				== (int)(ft_strlen(argv[i[0]]) - 1)))
 			newline = 0;
 		else
 		{
@@ -47,7 +47,7 @@ int	mini_echo(t_list *cmd)
 int	mini_pwd(void)
 // handle pwd.
 {
-	char *buf;
+	char	*buf;
 
 	buf = getcwd(NULL, 0);
 	ft_putendl_fd(buf, 1);
@@ -93,8 +93,8 @@ static void	handle_cd_paths(t_list *cmd, t_prompt *p, char **args,
 int	mini_cd(t_prompt *prom, t_list *cmd, char **args)
 // handle command cd.
 {
-	char **str[2];
-	char *aux;
+	char	**str[2];
+	char	*aux;
 
 	g_status = 0;
 	str[0] = ((t_mini *)prom->cmds->content)->full_cmd;

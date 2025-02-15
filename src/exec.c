@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 18:49:29 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/14 14:10:17 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/15 19:03:55 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ void	child_builtin(t_prompt *prompt, t_mini *n, int l, t_list *cmd)
 		ft_free_matrix(&prompt->envp);
 		g_status = mini_pwd();
 	}
-	else if (is_builtin(n) && n->full_cmd &&
-				!ft_strncmp(*n->full_cmd, "echo", l) && l == 4)
+	else if (is_builtin(n) && n->full_cmd
+		&& !ft_strncmp(*n->full_cmd, "echo", l) && l == 4)
 	{
 		ft_free_matrix(&prompt->envp);
 		g_status = mini_echo(cmd);
 	}
-	else if (is_builtin(n) && n->full_cmd &&
-				!ft_strncmp(*n->full_cmd, "env", l) && l == 3)
+	else if (is_builtin(n) && n->full_cmd
+		&& !ft_strncmp(*n->full_cmd, "env", l) && l == 3)
 	{
 		ft_putmatrix_fd(prompt->envp, 1, 1);
 		ft_free_matrix(&prompt->envp);
@@ -44,7 +44,7 @@ void	child_builtin(t_prompt *prompt, t_mini *n, int l, t_list *cmd)
 static void	*child_redir(t_list *cmd, int fd[2])
 // redirection the command to input and output file or pipe.
 {
-	t_mini *node;
+	t_mini	*node;
 
 	node = cmd->content;
 	if (node->infile != STDIN_FILENO)
@@ -68,8 +68,8 @@ static void	*child_redir(t_list *cmd, int fd[2])
 void	*child_process(t_prompt *prompt, t_list *cmd, int fd[2])
 // after make fork this is chiled process.
 {
-	t_mini *n;
-	int l;
+	t_mini	*n;
+	int		l;
 
 	n = cmd->content;
 	l = 0;
@@ -85,7 +85,7 @@ void	*child_process(t_prompt *prompt, t_list *cmd, int fd[2])
 void	exec_fork(t_prompt *prompt, t_list *cmd, int fd[2])
 // make chiled process.
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid < 0)
@@ -101,8 +101,8 @@ void	exec_fork(t_prompt *prompt, t_list *cmd, int fd[2])
 void	*check_to_fork(t_prompt *prompt, t_list *cmd, int pipe_fd[2])
 // check the command before make chiled process.
 {
-	t_mini *n;
-	DIR *dir;
+	t_mini	*n;
+	DIR		*dir;
 
 	n = cmd->content;
 	dir = NULL;
@@ -113,7 +113,7 @@ void	*check_to_fork(t_prompt *prompt, t_list *cmd, int pipe_fd[2])
 	if ((n->full_path && access(n->full_path, X_OK) == 0) || is_builtin(n))
 		exec_fork(prompt, cmd, pipe_fd);
 	else if (!is_builtin(n) && ((n->full_path && !access(n->full_path, F_OK))
-				|| dir))
+			|| dir))
 		g_status = 126;
 	else if (!is_builtin(n) && n->full_cmd)
 		g_status = 127;

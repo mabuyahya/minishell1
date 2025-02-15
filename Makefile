@@ -31,6 +31,7 @@ SRC = builtins.c \
 	ft_cmdsubsplit.c \
 	ft_strtrim_all.c \
 	get_cmd.c \
+	get_cmd_2.c \
 	get_params.c \
 	handle_quote.c \
 	heredoc.c \

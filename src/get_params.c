@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_params.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 19:48:14 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/14 12:53:43 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/15 18:46:20 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 extern int	g_status;
 
+// if (flags[0] && flags[1]) // >>
+// else if (flags[0] && !flags[1]) // >
 static int	get_fd(int old_file, char *path, int flags[2])
 {
 	int	fd;
@@ -28,9 +30,9 @@ static int	get_fd(int old_file, char *path, int flags[2])
 		mini_perror(NPERM, path, 126);
 	else if (flags[0] && access(path, W_OK) == -1 && access(path, F_OK) == 0)
 		mini_perror(NPERM, path, 126);
-	if (flags[0] && flags[1]) // >>
+	if (flags[0] && flags[1])
 		fd = open(path, O_CREAT | O_WRONLY | O_APPEND, 0666);
-	else if (flags[0] && !flags[1]) // >
+	else if (flags[0] && !flags[1])
 		fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	else if (!flags[0] && old_file != -1)
 		fd = open(path, O_RDONLY);
@@ -39,11 +41,11 @@ static int	get_fd(int old_file, char *path, int flags[2])
 	return (fd);
 }
 
-t_mini	*get_outfile1(t_mini *node, char **args, int *i)
 // >
+t_mini	*get_outfile1(t_mini *node, char **args, int *i)
 {
-	char *nl;
-	int flags[2];
+	char	*nl;
+	int		flags[2];
 
 	flags[0] = 1;
 	flags[1] = 0;
@@ -65,13 +67,13 @@ t_mini	*get_outfile1(t_mini *node, char **args, int *i)
 	return (node);
 }
 
-t_mini	*get_outfile2(t_mini *node, char **args, int *i)
 // args  with expanding.
 // node = content.
 // >>
+t_mini	*get_outfile2(t_mini *node, char **args, int *i)
 {
-	char *nl;
-	int flags[2];
+	char	*nl;
+	int		flags[2];
 
 	flags[0] = 1;
 	flags[1] = 1;
@@ -93,11 +95,11 @@ t_mini	*get_outfile2(t_mini *node, char **args, int *i)
 	return (node);
 }
 
-t_mini	*get_infile1(t_mini *node, char **args, int *i)
 // for infile.
+t_mini	*get_infile1(t_mini *node, char **args, int *i)
 {
-	char *nl;
-	int flags[2];
+	char	*nl;
+	int		flags[2];
 
 	flags[0] = 0;
 	flags[1] = 0;
@@ -119,12 +121,12 @@ t_mini	*get_infile1(t_mini *node, char **args, int *i)
 	return (node);
 }
 
-t_mini	*get_infile2(t_mini *node, char **args, int *i)
 // for heardoc.
+t_mini	*get_infile2(t_mini *node, char **args, int *i)
 {
-	char *aux[2];
-	char *nl;
-	char *str[2];
+	char	*aux[2];
+	char	*nl;
+	char	*str[2];
 
 	str[0] = NULL;
 	str[1] = NULL;

@@ -6,12 +6,14 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:31:29 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 17:31:45 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:47:57 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// if (!ft_strncmp(envp[ij[1]], argv, pos + 1))
+// check if the argument exist in env variable.
 int	var_in_envp(char *argv, char **envp, int ij[2])
 {
 	int	pos;
@@ -23,7 +25,6 @@ int	var_in_envp(char *argv, char **envp, int ij[2])
 	while (envp[ij[1]])
 	{
 		if (!ft_strncmp(envp[ij[1]], argv, pos + 1))
-		// check if the argument exist in env variable.
 			return (1);
 		ij[1]++;
 	}

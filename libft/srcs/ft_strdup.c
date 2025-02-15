@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 15:04:53 by sbibers           #+#    #+#             */
-/*   Updated: 2024/08/28 17:14:09 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 18:31:24 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,3 @@ char	*ft_strdup(const char *s1)
 	ft_strlcpy(d, s1, size + 1);
 	return (d);
 }
-

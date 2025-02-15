@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 17:30:49 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/15 19:07:19 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@
 
 # define READ_END 0
 # define WRITE_END 1
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 24
-# endif
 
 typedef struct s_expand_read
 {
@@ -111,6 +108,11 @@ int			mini_pwd(void);
 int			mini_echo(t_list *cmd);
 int			mini_cd(t_prompt *prompt, t_list *cmd, char **args);
 t_list		*stop_fill(t_list *cmds, char **args, char **temp);
+
+void		check_command_path(t_list *cmd, char ***s, char *path,
+				t_prompt *prom);
+DIR			*check_directory(t_list *cmd, char ***s, char *path,
+				t_prompt *prom);
 
 int			var_in_envp(char *argv, char **envp, int ij[2]);
 int			is_numeric(char *str);
