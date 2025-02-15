@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/14 14:09:29 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/15 14:09:11 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern int	g_status;
 
 static void stop_get(char **envp)
 {
@@ -26,6 +28,10 @@ char	*mini_getenv(char *var, char **envp, int n)
 	char *sub;
 
 	i = 0;
+	if (ft_strncmp(var, "?", 1) == 0 && ft_strlen(var) == 1)
+    {
+        return (ft_itoa(g_status));
+    }
 	if (n < 0)
 		n = ft_strlen(var);
 	while (!ft_strchr(var, '=') && envp && envp[i])

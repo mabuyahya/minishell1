@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/14 17:27:20 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/15 14:14:38 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	**expand(char **args, t_prompt *prom)
 	i = -1;
 	while (args && args[++i])
 	{
-		args[i] = expand_vars(args[i], -1, quotes, prom, args);
+		// args[i] = expand_vars(args[i], -1, quotes, prom, args);
 		args[i] = expand_path(args[i], -1, quotes,
 			mini_getenv("HOME", prom->envp, 4));
 		if (!args[i])
@@ -94,6 +94,71 @@ int	is_numeric(char *str)
 	return (1);
 }
 
+static char *expand_variable(char *line, char *key_start,t_prompt *main)
+{
+    char    *key_eend;
+    char    *env_value;
+    char    *key;
+    char    *expanded;
+    size_t len;
+    key_eend = key_start;
+    while (*key_eend && (ft_isalnum(*key_eend) || *key_eend == '?'))
+        key_eend++;
+    len = key_eend - key_start;
+    key = strndup(key_start, len);
+    if (!key)
+        return (line);
+    env_value = mini_getenv(key, main->envp, -1);
+    free(key);
+    if (!env_value)
+        env_value = strdup("");
+    size_t new_len = strlen(line) - len + strlen(env_value);
+    expanded = ft_calloc(new_len + 1, 1);
+    if (!expanded)
+    {
+        free(env_value);
+        return (line);
+    }
+    size_t prefix_len = key_start - line - 1;
+    strncpy(expanded, line, prefix_len);
+    expanded[prefix_len] = '\0';
+    strcat(expanded, env_value);
+	free(env_value);
+    strcat(expanded, key_eend);
+    free(line);
+    return (expanded);
+}
+char *expand_variables(t_prompt *main, char *line)
+{
+    int in_double_quote = 0;
+    int in_single_quote = 0;
+    char *ptr = NULL;
+	size_t offset;
+	char *new_line;
+	offset = 0;
+	new_line = NULL;
+	if (!line)
+        return NULL; // Prevent NULL dereference
+	ptr = line;
+    while (*ptr)
+    {
+        if (*ptr == '\'')
+            in_single_quote = !in_single_quote;
+        else if (*ptr == '"')
+            in_double_quote = !in_double_quote;
+        else if (*ptr == '$' && !in_single_quote)
+        {
+            offset = ptr - line; 
+            new_line = expand_variable(line, ptr + 1, main);
+            if (!new_line)
+                return line;
+            ptr = new_line + offset;
+            line = new_line;
+        }
+        ptr++;
+    }
+	return line;
+}
 void	*check_args(char *read, t_prompt *prom)
 // all solution.
 {
@@ -107,6 +172,8 @@ void	*check_args(char *read, t_prompt *prom)
 	}
 	if (read[0] != '\0')
 		add_history(read);
+		
+	read = expand_variables(prom, read);
 	str = handle_quote(read, " ", prom);
 	if (read)
 		free(read);
