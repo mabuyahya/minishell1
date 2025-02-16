@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 04:51:07 by salam            ###   ########.fr       */
+/*   Created: 2025/02/16 11:26:13 by mabuyahy          #+#    #+#             */
+/*   Updated: 2025/02/16 13:27:45 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 {
 	char	*sstr;
 
+	(void)(argv);
 	str = getcwd(NULL, 0);
 	prom->envp = mini_setenv("PWD", str, prom->envp, 3);
 	free(str);
@@ -45,10 +46,6 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 		prom->envp = mini_setenv("PATH",
 				"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin",
 				prom->envp, 4);
-	free(str);
-	str = mini_getenv("_", prom->envp, 1);
-	if (!str)
-		prom->envp = mini_setenv("_", argv[0], prom->envp, 1);
 	free(str);
 }
 

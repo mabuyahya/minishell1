@@ -62,11 +62,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 
 # Build Libft
 $(LIBFT): | $(LIBFT_DIR)
-	make -C $(LIBFT_DIR)
+	make -s -C $(LIBFT_DIR)
 
 # Cleanup
 clean:
-	make clean -C $(LIBFT_DIR)
+	make clean -s -C $(LIBFT_DIR)
 	$(RM) -r $(OBJ_DIR)
 
 fclean: clean

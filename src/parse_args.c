@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 05:35:04 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/16 13:29:41 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	check_args_util(t_prompt *prom, t_mini *node)
 
 // all solution.
 void	*check_args(char *read, t_prompt *prom)
+// str is a splited read acording to spasess and quotes
 {
 	char	**str;
 	t_mini	*node;
@@ -104,6 +105,7 @@ void	*check_args(char *read, t_prompt *prom)
 	if (read[0] != '\0')
 		add_history(read);
 	read = expand_variables(prom, read);
+	printf("read : %s\n", read);
 	str = split_quote_space(read, " ", prom);
 	if (read)
 		free(read);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 19:17:25 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/16 05:35:02 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/16 10:45:42 by mabuyahy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_strncpy(char *dest, const char *src, int n)
 char	*ft_strndup(const char *s, int n)
 {
 	char	*dup;
-	char	*d;
+	char	*str;
 	int		len;
 
 	len = 0;
@@ -62,14 +62,14 @@ char	*ft_strndup(const char *s, int n)
 	dup = (char *)malloc(len + 1);
 	if (!dup)
 		return (NULL);
-	d = dup;
+	str = dup;
 	while (len > 0)
 	{
-		*d = *s;
-		d++;
+		*str = *s;
+		str++;
 		s++;
 		len--;
 	}
-	*d = '\0';
+	*str = '\0';
 	return (dup);
 }
