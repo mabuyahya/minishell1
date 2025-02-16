@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:21:27 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/16 11:28:10 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/15 18:42:58 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,47 +20,47 @@ t_list	*stop_fill(t_list *cmds, char **args, char **temp)
 	return (NULL);
 }
 
-int	ft_matrixlen(char **str)
+int	ft_matrixlen(char **m)
 {
 	int	i;
 
 	i = 0;
-	while (str && str[i])
+	while (m && m[i])
 		i++;
 	return (i);
 }
 
-void	ft_free_matrix(char ***str)
+void	ft_free_matrix(char ***m)
 {
 	int	i;
 
 	i = 0;
-	while (str && str[0] && str[0][i])
+	while (m && m[0] && m[0][i])
 	{
-		free(str[0][i]);
+		free(m[0][i]);
 		i++;
 	}
-	if (str)
+	if (m)
 	{
-		free(str[0]);
-		*str = NULL;
+		free(m[0]);
+		*m = NULL;
 	}
 }
 
-char	**ft_dup_matrix(char **s_str)
+char	**ft_dup_matrix(char **m)
 {
 	char	**str;
 	int		n;
 	int		i;
 
 	i = 0;
-	n = ft_matrixlen(s_str);
+	n = ft_matrixlen(m);
 	str = malloc(sizeof(char *) * (n + 1));
 	if (!str)
 		return (NULL);
-	while (s_str[i])
+	while (m[i])
 	{
-		str[i] = ft_strdup(s_str[i]);
+		str[i] = ft_strdup(m[i]);
 		if (!str[i])
 		{
 			ft_free_matrix(&str);

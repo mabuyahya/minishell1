@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/16 11:56:00 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/15 17:32:48 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*mini_getenv(char *var, char **envp, int n)
 	char	*sub;
 
 	i = 0;
-	
 	if (ft_strncmp(var, "?", 1) == 0 && ft_strlen(var) == 1)
 		return (ft_itoa(g_status));
 	if (n < 0)
