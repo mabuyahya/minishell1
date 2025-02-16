@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/16 05:35:53 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/16 19:40:34 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,36 +22,41 @@ static void	update_quotes(char c, int quotes[2])
 		quotes[1] = !quotes[1];
 }
 
-static int	expand_path_util(char *aux, char *path, char *str, int *i)
-{
-	aux = ft_strjoin(path, str + *i + 1);
-	if (!aux)
-	{
-		free(str);
-		free(path);
-		return (0);
-	}
-	free(str);
-	free(path);
-	return (1);
-}
-
-static char	*handle_fail_expand_path(char *aux, char *path, char *var)
+static char	*handle_fail_expand_path(char *temp, char *path, char *var)
 {
 	if (path)
 		free(path);
-	if (aux)
-		free(aux);
+	if (temp)
+		free(temp);
 	if (var)
 		free(var);
 	return (NULL);
 }
 
+char	*replace_tilde(char *str, int *i, char *var)
+{
+	char	*temp;
+	char	*path;
+	char	*new_str;
+
+	temp = ft_substr(str, 0, *i);
+	if (!temp)
+		return (handle_fail_expand_path(NULL, str, var));
+	path = ft_strjoin(temp, var);
+	free(temp);
+	if (!path)
+		return (handle_fail_expand_path(temp, NULL, var));
+	new_str = ft_strjoin(path, str + *i + 1);
+	free(path);
+	if (!new_str)
+		return (handle_fail_expand_path(NULL, NULL, var));
+	free(str);
+	*i = *i + ft_strlen(var) - 1;
+	return (new_str);
+}
+
 char	*expand_path(char *str, int i, int quotes[2], char *var)
 {
-	char	*aux;
-	char	*path;
-
 	quotes[0] = 0;
 	quotes[1] = 0;
 	while (str && str[++i])
@@ -59,18 +64,9 @@ char	*expand_path(char *str, int i, int quotes[2], char *var)
 		update_quotes(str[i], quotes);
 		if (!quotes[0] && !quotes[1] && str[i] == '~'
 			&& (i == 0 || str[i - 1] != '$'))
-		{
-			aux = ft_substr(str, 0, i);
-			if (!aux)
-				return (handle_fail_expand_path(aux, NULL, var));
-			path = ft_strjoin(aux, var);
-			if (!path)
-				return (handle_fail_expand_path(aux, path, var));
-			free(aux);
-			if (!expand_path_util(aux, path, str, &i))
-				return (handle_fail_expand_path(NULL, NULL, var));
-			return (expand_path(aux, i + ft_strlen(var) - 1, quotes, var));
-		}
+			str = replace_tilde(str, &i, var);
+		if (!str)
+			return (NULL);
 	}
 	free(var);
 	return (str);

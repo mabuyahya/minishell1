@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/16 04:55:31 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/16 19:44:09 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 typedef struct s_expand_read
 {
 	int		in_double_quote;
-	int		in_single_quote;
+	int		in_single;
 	char	*ptr;
 	size_t	offset;
 	char	*new_line;
@@ -41,6 +41,8 @@ typedef struct s_expand_read_2
 	char	*key;
 	char	*expanded;
 	size_t	len;
+	size_t	new_len;
+	size_t	prefix_len;
 }			t_expand_read_2;
 
 typedef struct s_prompt

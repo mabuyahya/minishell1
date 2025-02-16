@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 04:57:17 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/16 19:22:31 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_count_words(const char *s, char *seo)
 // count the wrod by space and ' and "
+static int	ft_count_words(const char *s, char *seo)
 {
 	int		count;
 	int		i;
@@ -57,8 +57,8 @@ static void	update_quotes(char *s, int *i, char *quote)
 	(*i)++;
 }
 
-static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 // split word by ' "
+static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 {
 	int		i;
 	int		start;
@@ -86,8 +86,8 @@ static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 	return (array);
 }
 
-char	**split_quote_space(char *str, char *sep, t_prompt *prom)
 // split the command by spaces and ' and ".
+char	**split_quote_space(char *str, char *sep, t_prompt *prom)
 {
 	char	**array;
 	int		words;

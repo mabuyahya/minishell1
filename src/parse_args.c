@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 05:35:04 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/16 19:43:53 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,13 @@ static char	**expand(char **args, t_prompt *prom)
 // waitpid(-1, NULL, NULL) : to wait any chiled process.
 static void	*parse_args(char **args, t_prompt *prom)
 {
-	int	is_exit;
-	int	i;
+	int		is_exit;
+	int		i;
+	char	**temp;
 
 	is_exit = 0;
-	prom->cmds = fill_nodes(expand(args, prom), -1, prom);
+	temp = expand(args, prom);
+	prom->cmds = fill_nodes(temp, -1, prom);
 	if (!prom->cmds)
 		return (prom);
 	i = ft_lstsize(prom->cmds);
@@ -105,12 +107,12 @@ void	*check_args(char *read, t_prompt *prom)
 		add_history(read);
 	read = expand_variables(prom, read);
 	str = split_quote_space(read, " ", prom);
-	if (read)
-		free(read);
+	free(read);
 	if (!str)
+	{
 		mini_perror(QUOTE, NULL, 1);
-	if (!str)
-		return ("");
+		return (NULL);
+	}
 	prom = parse_args(str, prom);
 	check_args_util(prom, node);
 	return (prom);
