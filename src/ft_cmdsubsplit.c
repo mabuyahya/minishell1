@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cmdsubsplit.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 18:23:56 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 18:36:54 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/16 05:17:11 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
 }
 
 char	**ft_cmdsubsplit(char const *s, char *set)
+// split string by |, <, >
 {
 	char	**words;
 	int		count_word;

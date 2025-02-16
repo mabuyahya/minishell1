@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 19:17:25 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/15 19:31:37 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/16 05:35:02 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,37 @@
 
 char	*ft_strcat(char *dest, const char *src)
 {
-	char	*d;
+	char	*str;
 
-	d = dest;
-	while (*d)
-		d++;
+	str = dest;
+	while (*str)
+		str++;
 	while (*src)
 	{
-		*d = *src;
-		d++;
+		*str = *src;
+		str++;
 		src++;
 	}
-	*d = '\0';
+	*str = '\0';
 	return (dest);
 }
 
 char	*ft_strncpy(char *dest, const char *src, int n)
 {
-	char	*d;
+	char	*str;
 
-	d = dest;
+	str = dest;
 	while (n > 0 && *src)
 	{
-		*d = *src;
-		d++;
+		*str = *src;
+		str++;
 		src++;
 		n--;
 	}
 	while (n > 0)
 	{
-		*d = '\0';
-		d++;
+		*str = '\0';
+		str++;
 		n--;
 	}
 	return (dest);

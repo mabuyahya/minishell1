@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 18:33:32 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/16 04:57:17 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 	return (array);
 }
 
-char	**handle_quote(char *str, char *sep, t_prompt *prom)
+char	**split_quote_space(char *str, char *sep, t_prompt *prom)
 // split the command by spaces and ' and ".
 {
 	char	**array;
@@ -104,5 +104,6 @@ char	**handle_quote(char *str, char *sep, t_prompt *prom)
 		fail_allocate(prom, MEM);
 		exit(1);
 	}
-	return (ft_fill_array(array, str, sep, prom));
+	array = ft_fill_array(array, str, sep, prom);
+	return (array);
 }

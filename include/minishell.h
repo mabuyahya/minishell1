@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 19:35:52 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/16 04:55:31 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int			mini_export(t_prompt *prompt, t_list *cmd, char **args);
 int			mini_unset(t_prompt *prompt, t_list *cmd, char **args);
 int			mini_exit(t_list *cmd, int *is_exit);
 void		*check_args(char *out, t_prompt *p);
-char		**handle_quote(char *str, char *set, t_prompt *p);
+char		**split_quote_space(char *str, char *set, t_prompt *p);
 char		**ft_cmdsubsplit(char const *s, char *set);
 char		*ft_strtrim_all(char const *s1, int squote, int dquote);
 t_list		*fill_nodes(char **args, int i, t_prompt *p);

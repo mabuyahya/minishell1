@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 19:17:02 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/16 04:51:07 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,6 @@ void	fail_allocate(t_prompt *prom, int flag)
 	ft_free_matrix(&prom->envp);
 	mini_perror(flag, NULL, 1);
 	exit(1);
-}
-
-// get process id to handle $$.
-// get parant pid.  = (child - 1).
-static void	mini_getpid(t_prompt *prom)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		mini_perror(FORKERR, NULL, 1);
-		ft_free_matrix(&prom->envp);
-		exit(1);
-	}
-	if (!pid)
-	{
-		ft_free_matrix(&prom->envp);
-		exit(1);
-	}
-	waitpid(pid, NULL, 0);
-	prom->pid = pid - 1;
 }
 
 // init variables and get the path of the minishell.
@@ -89,7 +67,6 @@ static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 		exit(1);
 	}
 	g_status = 0;
-	mini_getpid(prom);
 	init_vars(prom, str, argv);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_var.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuyahy <mabuyahy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:51:42 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 19:33:56 by mabuyahy         ###   ########.fr       */
+/*   Updated: 2025/02/16 04:45:42 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ static void	init_expand_read(t_expand_read *var, char *line)
 	var->ptr = line;
 }
 
+// remove $
 char	*expand_variables(t_prompt *prom, char *line)
 {
 	t_expand_read	var;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
+/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 18:47:15 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/16 05:35:04 by salam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	handle_fail_expand(t_prompt *prom, char **args, char **str)
 	exit(1);
 }
 
-// remove and handle single double quotes and $ ~.
+// remove and handle single double quotes and ~.
 static char	**expand(char **args, t_prompt *prom)
 {
 	char	**str;
@@ -104,7 +104,7 @@ void	*check_args(char *read, t_prompt *prom)
 	if (read[0] != '\0')
 		add_history(read);
 	read = expand_variables(prom, read);
-	str = handle_quote(read, " ", prom);
+	str = split_quote_space(read, " ", prom);
 	if (read)
 		free(read);
 	if (!str)
