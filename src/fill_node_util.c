@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 17:05:01 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 18:37:26 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 15:40:59 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_mini	*get_params(t_mini *node, char **str[2], int *i)
 	if (str[0][*i])
 	{
 		if (str[0][*i][0] == '>' && str[0][*i + 1] && str[0][*i + 1][0] == '>')
-			node = get_outfile2(node, str[1], i);
+			node = out_redirction_double(node, str[1], i);
 		else if (str[0][*i][0] == '>')
 			node = get_outfile1(node, str[1], i);
 		else if (str[0][*i][0] == '<' && str[0][*i + 1] && str[0][*i
@@ -74,14 +74,14 @@ char	**allocate_and_dup_args(char **args, t_prompt *prom)
 
 void	trim_args(char **temp, char **args, t_prompt *prom)
 {
-	char	*aux;
+	char	*str;
 	int		j;
 
 	j = -1;
 	while (temp && temp[++j])
 	{
-		aux = ft_strtrim_all(temp[j], 0, 0);
-		if (!aux)
+		str = delete_qoutes(temp[j], 0, 0);
+		if (!str)
 		{
 			ft_free_matrix(&temp);
 			ft_free_matrix(&args);
@@ -90,6 +90,6 @@ void	trim_args(char **temp, char **args, t_prompt *prom)
 			exit(1);
 		}
 		free(temp[j]);
-		temp[j] = aux;
+		temp[j] = str;
 	}
 }

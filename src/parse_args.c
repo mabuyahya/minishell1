@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 19:43:53 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 16:34:32 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	**expand(char **args, t_prompt *prom)
 					prom->envp, 4));
 		if (!args[i])
 			handle_fail_expand(prom, args, str);
-		str = ft_cmdsubsplit(args[i], "<|>");
+		str = split_separator(args[i], "<|>");
 		if (!str)
 			handle_fail_expand(prom, args, NULL);
 		if (!ft_matrix_replace_in(&args, str, i))
@@ -63,13 +63,10 @@ static void	*parse_args(char **args, t_prompt *prom)
 	if (!prom->cmds)
 		return (prom);
 	i = ft_lstsize(prom->cmds);
+	prom->size = ft_lstsize(prom->cmds);
 	g_status = builtin(prom, prom->cmds, &is_exit, args);
 	while (i-- > 0)
-		waitpid(-1, &g_status, 0);
-	if (!is_exit && g_status == 13)
-		g_status = 0;
-	if (g_status > 255)
-		g_status = g_status / 255;
+		wait(NULL);
 	if (args && is_exit)
 	{
 		ft_lstclear(&prom->cmds, free_content);
@@ -111,7 +108,7 @@ void	*check_args(char *read, t_prompt *prom)
 	if (!str)
 	{
 		mini_perror(QUOTE, NULL, 1);
-		return (NULL);
+		return ("");
 	}
 	prom = parse_args(str, prom);
 	check_args_util(prom, node);

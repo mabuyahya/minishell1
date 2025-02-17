@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 04:51:07 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/17 16:39:55 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 	str = NULL;
 	prom->cmds = NULL;
 	prom->envp = NULL;
+	prom->size = 0;
 	prom->envp = ft_dup_matrix(envp);
 	if (!prom->envp)
 	{

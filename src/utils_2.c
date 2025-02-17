@@ -6,44 +6,47 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:21:27 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 18:42:58 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 15:54:39 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	*stop_fill(t_list *cmds, char **args, char **temp)
+t_list	*stop_fill(t_list *cmds, char **str_1, char **str_2)
 {
-	ft_lstclear(&cmds, free_content);
-	ft_free_matrix(&temp);
-	ft_free_matrix(&args);
+	if (cmds)
+		ft_lstclear(&cmds, free_content);
+	if (str_2 && str_2[0])
+		ft_free_matrix(&str_2);
+	if (str_1 && str_1[0])
+		ft_free_matrix(&str_1);
 	return (NULL);
 }
 
-int	ft_matrixlen(char **m)
+int	ft_matrixlen(char **str)
 {
 	int	i;
 
 	i = 0;
-	while (m && m[i])
+	while (str && str[i])
 		i++;
 	return (i);
 }
 
-void	ft_free_matrix(char ***m)
+void	ft_free_matrix(char ***str)
 {
 	int	i;
 
 	i = 0;
-	while (m && m[0] && m[0][i])
+	while (str && str[0] && str[0][i])
 	{
-		free(m[0][i]);
+		free(str[0][i]);
 		i++;
 	}
-	if (m)
+	if (str)
 	{
-		free(m[0]);
-		*m = NULL;
+		free(str[0]);
+		*str = NULL;
 	}
 }
 

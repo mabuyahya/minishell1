@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:15:34 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 18:44:27 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 18:50:01 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,35 +63,37 @@ static void	stop_solution(t_list *cmd, t_prompt *prom, char **args, char ***str)
 	exit(1);
 }
 
-static void	handle_cd_paths(t_list *cmd, t_prompt *p, char **args,
+// str[1] = home + pwd + NULL.
+static void	handle_cd_paths(t_list *cmd, t_prompt *prom, char **args,
 		char **str[2])
 {
-	char	*aux;
+	char	*temp;
 
-	aux = getcwd(NULL, 0);
-	str[1] = ft_extend_matrix(str[1], aux);
-	free(aux);
+	temp = getcwd(NULL, 0);
+	str[1] = ft_extend_matrix(str[1], temp);
+	free(temp);
 	if (!str[1])
-		stop_solution(cmd, p, args, str);
+		stop_solution(cmd, prom, args, str);
 	cd_error(str);
 	if (!g_status)
-		p->envp = mini_setenv("OLDPWD", str[1][1], p->envp, 6);
-	aux = getcwd(NULL, 0);
-	if (!aux)
+		prom->envp = mini_setenv("OLDPWD", str[1][1], prom->envp, 6);
+	temp = getcwd(NULL, 0);
+	if (!temp)
 	{
-		aux = ft_strdup("");
-		if (!aux)
-			stop_solution(cmd, p, args, str);
+		temp = ft_strdup("");
+		if (!temp)
+			stop_solution(cmd, prom, args, str);
 	}
-	str[1] = ft_extend_matrix(str[1], aux);
-	free(aux);
+	str[1] = ft_extend_matrix(str[1], temp);
+	free(temp);
 	if (!str[1])
-		stop_solution(cmd, p, args, str);
-	p->envp = mini_setenv("PWD", str[1][2], p->envp, 3);
+		stop_solution(cmd, prom, args, str);
+	prom->envp = mini_setenv("PWD", str[1][2], prom->envp, 3);
 }
 
 int	mini_cd(t_prompt *prom, t_list *cmd, char **args)
 // handle command cd.
+// str[0] = all the command, str[1] = the home + NULL.
 {
 	char	**str[2];
 	char	*aux;

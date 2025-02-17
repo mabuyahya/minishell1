@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:51:42 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/16 19:43:23 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 16:10:57 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 extern int	g_status;
 
 static void	expand_variable_util(t_expand_read_2 *var,
-	char *line, int prefix_len)
+									char *line,
+									int prefix_len)
 {
 	ft_strncpy(var->expanded, line, prefix_len);
 	var->expanded[prefix_len] = '\0';
@@ -30,8 +31,8 @@ static char	*expand_variable(char *line, char *key_start, t_prompt *main)
 	t_expand_read_2	var;
 
 	var.key_eend = key_start;
-	while (*var.key_eend && (ft_isalnum(*var.key_eend)
-			|| *var.key_eend == '?' || *var.key_eend == '_'))
+	while (*var.key_eend && (ft_isalnum(*var.key_eend) || *var.key_eend == '?'
+			|| *var.key_eend == '_'))
 		var.key_eend++;
 	var.len = var.key_eend - key_start;
 	var.key = ft_strndup(key_start, var.len);
@@ -79,8 +80,6 @@ char	*expand_variables(t_prompt *prom, char *line)
 			var.in_double_quote = !var.in_double_quote;
 		else if (*var.ptr == '$' && !var.in_single && *(var.ptr + 1) != '~')
 		{
-			if (ft_strchr(var.ptr, '$'))
-				g_status = 0;
 			var.offset = var.ptr - line;
 			var.new_line = expand_variable(line, var.ptr + 1, prom);
 			if (!var.new_line)

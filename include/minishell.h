@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/16 19:44:09 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 17:12:54 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_prompt
 	t_list	*cmds;
 	char	**envp;
 	pid_t	pid;
+	int		size;
 }			t_prompt;
 
 typedef struct s_mini
@@ -75,6 +76,12 @@ typedef struct s_set_env
 	char	*equal_pos;
 	char	*add_equal;
 }			t_set_env;
+
+typedef struct s_fill_node
+{
+	char	**temp[2];
+	int		stop;
+}			t_fill_node;
 
 enum		e_mini_error
 {
@@ -138,15 +145,15 @@ int			is_builtin(t_mini *n);
 void		cd_error(char **str[2]);
 int			mini_export(t_prompt *prompt, t_list *cmd, char **args);
 int			mini_unset(t_prompt *prompt, t_list *cmd, char **args);
-int			mini_exit(t_list *cmd, int *is_exit);
+int			handle_exit(t_list *cmd, int *is_exit, t_prompt *prom);
 void		*check_args(char *out, t_prompt *p);
 char		**split_quote_space(char *str, char *set, t_prompt *p);
-char		**ft_cmdsubsplit(char const *s, char *set);
-char		*ft_strtrim_all(char const *s1, int squote, int dquote);
+char		**split_separator(char const *s, char *set);
+char		*delete_qoutes(char const *s1, int squote, int dquote);
 t_list		*fill_nodes(char **args, int i, t_prompt *p);
 // int		get_fd(int oldfd, char *path, int flags[2]);
 t_mini		*get_outfile1(t_mini *node, char **args, int *i);
-t_mini		*get_outfile2(t_mini *node, char **args, int *i);
+t_mini		*out_redirction_double(t_mini *node, char **args, int *i);
 t_mini		*get_infile1(t_mini *node, char **args, int *i);
 t_mini		*get_infile2(t_mini *node, char **args, int *i);
 void		*exec_cmd(t_prompt *prompt, t_list *cmd);
@@ -165,5 +172,9 @@ char		**mini_setenv(char *var, char *value, char **envp, int n);
 void		free_content(void *content);
 void		handle_sigint(int sig);
 void		handle_sigint_child(int sig);
+void	handle_fill_nodes(t_list **cmds, char **args, t_prompt *prom, char ***temp);
+void	fill_node_util(t_list **cmds, t_fill_node *fill, int *i);
+void	fill_node_util_2(char **args, t_fill_node *fill, t_list **cmds, int *i);
+void	init_fill_node(t_list **cmds, t_fill_node *fill, char **args, t_prompt *prom);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 11:36:47 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/15 19:04:24 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 18:50:04 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,59 +44,65 @@ void	*mini_perror(int err_type, char *param, int err)
 	return (NULL);
 }
 
-int	ft_atoi2(const char *nptr, long *nbr)
+int	check_num_exit(const char *num_ptr, int *number)
 {
-	int	sign;
+	int	neg;
 
-	sign = 1;
-	*nbr = 0;
-	while (ft_isspace(*nptr))
-		nptr++;
-	if (*nptr == '-')
-		sign = -sign;
-	if (*nptr == '-' || *nptr == '+')
-		nptr++;
-	if (!ft_isdigit(*nptr))
+	neg = 1;
+	*number = 0;
+	while (ft_isspace(*num_ptr))
+		num_ptr++;
+	if (*num_ptr == '-')
+		neg = -neg;
+	if (*num_ptr == '-' || *num_ptr == '+')
+		num_ptr++;
+	if (!ft_isdigit(*num_ptr))
 		return (-1);
-	while (ft_isdigit(*nptr))
+	while (ft_isdigit(*num_ptr))
 	{
-		*nbr = 10 * *nbr + (*nptr - '0');
-		nptr++;
+		*number = 10 * *number + (*num_ptr - '0');
+		num_ptr++;
 	}
-	if (*nptr && !ft_isspace(*nptr))
+	if (*num_ptr && !ft_isspace(*num_ptr))
 		return (-1);
-	*nbr *= sign;
+	*number *= neg;
 	return (0);
 }
 
-int	mini_exit(t_list *cmd, int *is_exit)
+static void handle_print_exit(t_mini *node)
+{
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd(node->full_cmd[1], 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+}
+
 // handle the command exit.
+// status_arr[0] = status_arr[0] % 256 + 256 * (status_arr[0] < 0); : to handle over flow.
+int	handle_exit(t_list *cmd, int *exit_num, t_prompt *prom)
 {
 	t_mini	*node;
-	long	exit_status[2];
+	int		status_arr[2];
 
 	node = cmd->content;
-	*is_exit = !cmd->next;
-	if (*is_exit)
+	*exit_num = (!cmd->next && (prom->size == 1));
+	if (*exit_num)
 		ft_putstr_fd("exit\n", 2);
 	if (!node->full_cmd || !node->full_cmd[1])
 		return (0);
-	exit_status[1] = ft_atoi2(node->full_cmd[1], &exit_status[0]);
-	if (exit_status[1] == -1)
+	status_arr[1] = check_num_exit(node->full_cmd[1], &status_arr[0]);
+	if (status_arr[1] == -1)
 	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(node->full_cmd[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
+		handle_print_exit(node);
 		return (255);
 	}
 	else if (node->full_cmd[2])
 	{
-		*is_exit = 0;
+		*exit_num = 0;
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
-	exit_status[0] = exit_status[0] % 256 + 256 * (exit_status[0] < 0);
-	return (exit_status[0]);
+	status_arr[0] = status_arr[0] % 256 + 256 * (status_arr[0] < 0);
+	return (status_arr[0]);
 }
 
 void	cd_error(char **str[2])
@@ -132,9 +138,9 @@ void	free_content(void *content)
 	node = content;
 	ft_free_matrix(&node->full_cmd);
 	free(node->full_path);
-	if (node->infile != STDIN_FILENO)
+	if (node->infile > 0)
 		close(node->infile);
-	if (node->outfile != STDOUT_FILENO)
+	if (node->outfile > 1)
 		close(node->outfile);
 	free(node);
 }

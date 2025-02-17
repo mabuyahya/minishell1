@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:49:26 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/16 18:48:14 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 19:56:58 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,11 @@ void	*exec_cmd(t_prompt *prompt, t_list *cmd)
 	if (pipe(pipe_fd) == -1)
 		return (mini_perror(PIPERR, NULL, 1));
 	if (!check_to_fork(prompt, cmd, pipe_fd))
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
 		return (NULL);
+	}
 	close(pipe_fd[WRITE_END]);
 	if (cmd->next && !((t_mini *)cmd->next->content)->infile)
 		((t_mini *)cmd->next->content)->infile = pipe_fd[READ_END];

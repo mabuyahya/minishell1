@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 05:32:15 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/17 17:13:24 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	builtin(t_prompt *prom, t_list *cmd, int *exit_num, char **args)
 		if (str)
 			n = ft_strlen(*str);
 		if (str && !ft_strncmp(*str, "exit", n) && n == 4)
-			g_status = mini_exit(cmd, exit_num);
+			g_status = handle_exit(cmd, exit_num, prom);
 		else if (!cmd->next && str && !ft_strncmp(*str, "cd", n) && n == 2)
 			g_status = mini_cd(prom, cmd, args);
 		else if (!cmd->next && str && !ft_strncmp(*str, "export", n) && n == 6)

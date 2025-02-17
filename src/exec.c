@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 18:49:29 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/15 19:03:55 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/17 16:19:25 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,10 @@ void	exec_fork(t_prompt *prompt, t_list *cmd, int fd[2])
 		close(fd[WRITE_END]);
 		mini_perror(FORKERR, NULL, 1);
 	}
-	else if (!pid)
+	else if (pid == 0)
+	{
 		child_process(prompt, cmd, fd);
+	}
 }
 
 void	*check_to_fork(t_prompt *prompt, t_list *cmd, int pipe_fd[2])
@@ -111,7 +113,10 @@ void	*check_to_fork(t_prompt *prompt, t_list *cmd, int pipe_fd[2])
 	if (n->infile == -1 || n->outfile == -1)
 		return (NULL);
 	if ((n->full_path && access(n->full_path, X_OK) == 0) || is_builtin(n))
+	{
 		exec_fork(prompt, cmd, pipe_fd);
+		g_status = 0;
+	}
 	else if (!is_builtin(n) && ((n->full_path && !access(n->full_path, F_OK))
 			|| dir))
 		g_status = 126;

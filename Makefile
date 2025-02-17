@@ -28,8 +28,8 @@ SRC = builtins.c \
 	expand_path.c \
 	expand_var.c \
 	fill_node_util.c \
-	ft_cmdsubsplit.c \
-	ft_strtrim_all.c \
+	split_separator.c \
+	delete_quotes.c \
 	get_cmd.c \
 	get_cmd_2.c \
 	get_params.c \
@@ -46,6 +46,7 @@ SRC = builtins.c \
 	mini_unset.c \
 	mini_export.c \
 	utils_3.c \
+	fill_node_2.c \
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
