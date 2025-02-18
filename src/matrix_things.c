@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:33:31 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 18:42:32 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 16:12:01 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,32 @@ static int	ft_extend_matrix_utils(int *i, char **in, char **out)
 
 char	**ft_extend_matrix(char **in, char *newstr)
 {
-	char	**out;
+	char	**str;
 	int		len;
 	int		i;
 
 	i = -1;
-	out = NULL;
+	str = NULL;
 	if (!newstr)
 		return (in);
 	len = ft_matrixlen(in);
-	out = malloc(sizeof(char *) * (len + 2));
-	if (!out)
+	str = malloc(sizeof(char *) * (len + 2));
+	if (!str)
 		return (NULL);
-	out[len + 1] = NULL;
+	str[len + 1] = NULL;
 	while (++i < len)
-		if (!ft_extend_matrix_utils(&i, in, out))
+	{
+		if (!ft_extend_matrix_utils(&i, in, str))
 			return (NULL);
-	out[i] = ft_strdup(newstr);
-	if (!out[i])
+	}
+	str[i] = ft_strdup(newstr);
+	if (!str[i])
 	{
 		ft_free_matrix(&in);
 		return (NULL);
 	}
 	ft_free_matrix(&in);
-	return (out);
+	return (str);
 }
 
 static char	**ft_copy_big_row(char **aux, char **big, int *i, int n)

@@ -21,17 +21,15 @@ NAME = $(BIN)
 
 # Source Files
 SRC = builtins.c \
-	custom_cmd.c \
 	env.c \
 	error.c \
-	exec.c \
+	execute.c \
 	expand_path.c \
 	expand_var.c \
 	fill_node_util.c \
 	split_separator.c \
 	delete_quotes.c \
 	get_cmd.c \
-	get_cmd_2.c \
 	get_params.c \
 	handle_quote.c \
 	heredoc.c \
@@ -40,13 +38,14 @@ SRC = builtins.c \
 	parse_args.c \
 	signal.c \
 	utilities.c \
-	fill_creat_node.c \
-	handle_echo_pwd_cd.c \
+	creat_node.c \
+	creat_node_2.c \
+	handle_echo_pwd.c \
 	utils_2.c \
-	mini_unset.c \
-	mini_export.c \
+	handle_unset.c \
+	handle_export.c \
 	utils_3.c \
-	fill_node_2.c \
+	handle_cd.c \
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 

@@ -6,13 +6,13 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:21:27 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/17 15:54:39 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 11:08:05 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	*stop_fill(t_list *cmds, char **str_1, char **str_2)
+t_list	*stop_make_node(t_list *cmds, char **str_1, char **str_2)
 {
 	if (cmds)
 		ft_lstclear(&cmds, free_content);

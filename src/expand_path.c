@@ -6,13 +6,13 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:17:55 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/16 19:40:34 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 19:16:21 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	g_status;
+extern int	g_e_status;
 
 static void	update_quotes(char c, int quotes[2])
 {

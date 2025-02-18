@@ -6,13 +6,13 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/17 16:34:32 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 20:37:16 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	g_status;
+extern int	g_e_status;
 
 static void	handle_fail_expand(t_prompt *prom, char **args, char **str)
 {
@@ -21,7 +21,7 @@ static void	handle_fail_expand(t_prompt *prom, char **args, char **str)
 		ft_free_matrix(&args);
 	if (str && str[0])
 		ft_free_matrix(&str);
-	mini_perror(MEM, NULL, 1);
+	mini_perror(MEM, NULL, 1, prom);
 	exit(1);
 }
 
@@ -36,7 +36,7 @@ static char	**expand(char **args, t_prompt *prom)
 	while (args && args[++i])
 	{
 		args[i] = expand_path(args[i], -1, quotes, mini_getenv("HOME",
-					prom->envp, 4));
+					prom->envp, 4, prom));
 		if (!args[i])
 			handle_fail_expand(prom, args, str);
 		str = split_separator(args[i], "<|>");
@@ -50,23 +50,20 @@ static char	**expand(char **args, t_prompt *prom)
 	return (args);
 }
 
-// waitpid(-1, NULL, NULL) : to wait any chiled process.
 static void	*parse_args(char **args, t_prompt *prom)
 {
 	int		is_exit;
-	int		i;
 	char	**temp;
 
 	is_exit = 0;
 	temp = expand(args, prom);
-	prom->cmds = fill_nodes(temp, -1, prom);
+	prom->cmds = make_node(temp, -1, prom);
 	if (!prom->cmds)
 		return (prom);
-	i = ft_lstsize(prom->cmds);
 	prom->size = ft_lstsize(prom->cmds);
-	g_status = builtin(prom, prom->cmds, &is_exit, args);
-	while (i-- > 0)
-		wait(NULL);
+	prom->exit_status = handle_built_in(prom, prom->cmds, &is_exit, args);
+	while (wait(NULL) != -1)
+		;
 	if (args && is_exit)
 	{
 		ft_lstclear(&prom->cmds, free_content);
@@ -75,14 +72,14 @@ static void	*parse_args(char **args, t_prompt *prom)
 	return (prom);
 }
 
-void	check_args_util(t_prompt *prom, t_mini *node)
+void	check_args_util(t_prompt *prom, t_node_content *node)
 {
 	if (prom && prom->cmds)
 		node = prom->cmds->content;
 	if (prom && prom->cmds && node && node->full_cmd
 		&& ft_lstsize(prom->cmds) == 1)
 		prom->envp = mini_setenv("_",
-				node->full_cmd[ft_matrixlen(node->full_cmd) - 1], prom->envp,
+				node->full_cmd[ft_matrixlen(node->full_cmd) - 1], prom,
 				1);
 	if (prom && prom->cmds)
 		ft_lstclear(&prom->cmds, free_content);
@@ -92,7 +89,7 @@ void	check_args_util(t_prompt *prom, t_mini *node)
 void	*check_args(char *read, t_prompt *prom)
 {
 	char	**str;
-	t_mini	*node;
+	t_node_content	*node;
 
 	node = NULL;
 	if (!read)
@@ -107,7 +104,7 @@ void	*check_args(char *read, t_prompt *prom)
 	free(read);
 	if (!str)
 	{
-		mini_perror(QUOTE, NULL, 1);
+		mini_perror(QUOTE, NULL, 1, prom);
 		return ("");
 	}
 	prom = parse_args(str, prom);

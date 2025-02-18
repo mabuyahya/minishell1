@@ -6,13 +6,13 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:51:42 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/17 16:10:57 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 20:24:38 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	g_status;
+extern int	g_e_status;
 
 static void	expand_variable_util(t_expand_read_2 *var,
 									char *line,
@@ -26,7 +26,7 @@ static void	expand_variable_util(t_expand_read_2 *var,
 	free(line);
 }
 
-static char	*expand_variable(char *line, char *key_start, t_prompt *main)
+static char	*expand_variable(char *line, char *key_start, t_prompt *prom)
 {
 	t_expand_read_2	var;
 
@@ -38,7 +38,7 @@ static char	*expand_variable(char *line, char *key_start, t_prompt *main)
 	var.key = ft_strndup(key_start, var.len);
 	if (!var.key)
 		return (line);
-	var.env_value = mini_getenv(var.key, main->envp, -1);
+	var.env_value = mini_getenv(var.key, prom->envp, -1, prom);
 	free(var.key);
 	if (!var.env_value)
 		var.env_value = ft_strdup("");

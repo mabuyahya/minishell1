@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:41:00 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/15 18:59:56 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 12:15:55 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,46 +29,24 @@ int	ft_countchar(char *s, char c)
 }
 
 // take one string with char.
-int	ft_strchr_i(const char *s, int c)
+int	ft_strchr_index(const char *str, int c)
 {
-	unsigned char	c_unsigned;
+	unsigned char	cha;
 	int				i;
 
 	i = 0;
-	if (!s)
+	if (!str)
 		return (-1);
-	c_unsigned = (unsigned char)c;
-	while (s[i] != '\0')
+	cha = (unsigned char)c;
+	while (str[i] != '\0')
 	{
-		if (s[i] == c_unsigned)
+		if (str[i] == cha)
 			return (i);
 		i++;
 	}
-	if (c_unsigned == '\0')
+	if (cha == '\0')
 		return (i);
 	return (-1);
-}
-
-// take two string.
-int	ft_strchars_i(const char *s, char *set)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (-1);
-	while (s[i] != '\0')
-	{
-		if (ft_strchr(set, s[i]))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int	ft_isspace(char c)
-{
-	return ((c >= 9 && c <= 13) || c == ' ');
 }
 
 int	is_numeric(char *str)

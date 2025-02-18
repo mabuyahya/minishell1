@@ -6,22 +6,22 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/15 17:32:48 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/18 20:36:26 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int		g_status;
+extern int		g_e_status;
 
-static void	stop_get(char **envp)
+static void	stop_get(char **envp, t_prompt *prom)
 {
 	ft_free_matrix(&envp);
-	mini_perror(MEM, NULL, 1);
+	mini_perror(MEM, NULL, 1, prom);
 	exit(1);
 }
 
-char	*mini_getenv(char *var, char **envp, int n)
+char	*mini_getenv(char *var, char **envp, int n, t_prompt *prom)
 {
 	int		i;
 	int		n2;
@@ -29,19 +29,19 @@ char	*mini_getenv(char *var, char **envp, int n)
 
 	i = 0;
 	if (ft_strncmp(var, "?", 1) == 0 && ft_strlen(var) == 1)
-		return (ft_itoa(g_status));
+		return (ft_itoa(prom->exit_status));
 	if (n < 0)
 		n = ft_strlen(var);
 	while (!ft_strchr(var, '=') && envp && envp[i])
 	{
 		n2 = n;
-		if (n2 < ft_strchr_i(envp[i], '='))
-			n2 = ft_strchr_i(envp[i], '=');
+		if (n2 < ft_strchr_index(envp[i], '='))
+			n2 = ft_strchr_index(envp[i], '=');
 		if (!ft_strncmp(envp[i], var, n2))
 		{
 			sub = ft_substr(envp[i], n2 + 1, ft_strlen(envp[i]));
 			if (!sub)
-				stop_get(envp);
+				stop_get(envp, prom);
 			return (sub);
 		}
 		i++;
@@ -49,7 +49,7 @@ char	*mini_getenv(char *var, char **envp, int n)
 	return (NULL);
 }
 
-static void	stop_set(char *value, char **envp, char *new_entry)
+static void	stop_set(char *value, char **envp, char *new_entry, t_prompt *prom)
 {
 	if (envp && envp[0])
 		ft_free_matrix(&envp);
@@ -57,7 +57,7 @@ static void	stop_set(char *value, char **envp, char *new_entry)
 		free(value);
 	if (new_entry)
 		free(new_entry);
-	mini_perror(MEM, NULL, 1);
+	mini_perror(MEM, NULL, 1, prom);
 	exit(1);
 }
 
@@ -75,7 +75,7 @@ static char	**set_env_util(t_set_env *set_env, char **envp, char *var)
 }
 
 // add to env if not exist, if exist edit it.
-char	**mini_setenv(char *var, char *value, char **envp, int n)
+char	**mini_setenv(char *var, char *value, t_prompt *prom, int n)
 {
 	t_set_env	set_env;
 
@@ -83,23 +83,23 @@ char	**mini_setenv(char *var, char *value, char **envp, int n)
 		n = ft_strlen(var);
 	set_env.add_equal = ft_strjoin(var, "=");
 	if (!set_env.add_equal)
-		stop_set(value, envp, NULL);
+		stop_set(value, prom->envp, NULL, prom);
 	set_env.new_entry = ft_strjoin(set_env.add_equal, value);
 	if (!set_env.new_entry)
-		stop_set(value, envp, set_env.add_equal);
+		stop_set(value, prom->envp, set_env.add_equal, prom);
 	free(set_env.add_equal);
 	if (!set_env.new_entry)
-		return (envp);
+		return (prom->envp);
 	set_env.i = 0;
-	while (envp && envp[set_env.i])
+	while (prom->envp && prom->envp[set_env.i])
 	{
-		if (set_env_util(&set_env, envp, var))
-			return (envp);
+		if (set_env_util(&set_env, prom->envp, var))
+			return (prom->envp);
 		set_env.i++;
 	}
-	envp = ft_extend_matrix(envp, set_env.new_entry);
-	if (!envp)
-		stop_set(NULL, NULL, set_env.new_entry);
+	prom->envp = ft_extend_matrix(prom->envp, set_env.new_entry);
+	if (!prom->envp)
+		stop_set(NULL, NULL, set_env.new_entry, prom);
 	free(set_env.new_entry);
-	return (envp);
+	return (prom->envp);
 }

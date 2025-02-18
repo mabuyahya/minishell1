@@ -10,6 +10,8 @@
         "cstdlib": "c",
         "sstream": "c",
         "history.h": "c",
-        "ioctl.h": "c"
+        "ioctl.h": "c",
+        "wait.h": "c",
+        "readline.h": "c"
     }
 }
