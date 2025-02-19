@@ -6,14 +6,14 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/16 19:22:31 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 14:53:55 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // count the wrod by space and ' and "
-static int	ft_count_words(const char *s, char *seo)
+static int	ft_count_words(const char *str, char *seo)
 {
 	int		count;
 	int		i;
@@ -22,17 +22,17 @@ static int	ft_count_words(const char *s, char *seo)
 	i = 0;
 	count = 0;
 	quote = 0;
-	while (s[i])
+	while (str[i])
 	{
-		while (s[i] && ft_strchr(seo, s[i]))
+		while (str[i] && ft_strchr(seo, str[i]))
 			i++;
-		if (s[i])
+		if (str[i])
 			count++;
-		while (s[i] && (!ft_strchr(seo, s[i]) || quote))
+		while (str[i] && (!ft_strchr(seo, str[i]) || quote))
 		{
-			if (!quote && (s[i] == '\'' || s[i] == '\"'))
-				quote = s[i];
-			else if (quote && s[i] == quote)
+			if (!quote && (str[i] == '\'' || str[i] == '\"'))
+				quote = str[i];
+			else if (quote && str[i] == quote)
 				quote = 0;
 			i++;
 		}
@@ -48,17 +48,17 @@ static void	handle_allocation_failure(char **array, t_prompt *prom)
 	fail_allocate(prom, MEM);
 }
 
-static void	update_quotes(char *s, int *i, char *quote)
+static void	update_quotes(char *str, int *i, char *quote)
 {
-	if (!*quote && (s[*i] == '\'' || s[*i] == '"'))
-		*quote = s[*i];
-	else if (*quote && s[*i] == *quote)
+	if (!*quote && (str[*i] == '\'' || str[*i] == '"'))
+		*quote = str[*i];
+	else if (*quote && str[*i] == *quote)
 		*quote = 0;
 	(*i)++;
 }
 
 // split word by ' "
-static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
+static char	**make_command(char **array, char *str, char *sep, t_prompt *prom)
 {
 	int		i;
 	int		start;
@@ -68,16 +68,16 @@ static char	**ft_fill_array(char **array, char *s, char *sep, t_prompt *prom)
 	i = 0;
 	word = 0;
 	quote = 0;
-	while (s[i])
+	while (str[i])
 	{
-		while (s[i] && ft_strchr(sep, s[i]))
+		while (str[i] && ft_strchr(sep, str[i]))
 			i++;
 		start = i;
-		while (s[i] && (!ft_strchr(sep, s[i]) || quote))
-			update_quotes(s, &i, &quote);
+		while (str[i] && (!ft_strchr(sep, str[i]) || quote))
+			update_quotes(str, &i, &quote);
 		if (start < i)
 		{
-			array[word] = ft_substr(s, start, i - start);
+			array[word] = ft_substr(str, start, i - start);
 			if (!array[word++])
 				handle_allocation_failure(array, prom);
 		}
@@ -104,6 +104,6 @@ char	**split_quote_space(char *str, char *sep, t_prompt *prom)
 		fail_allocate(prom, MEM);
 		exit(1);
 	}
-	array = ft_fill_array(array, str, sep, prom);
+	array = make_command(array, str, sep, prom);
 	return (array);
 }

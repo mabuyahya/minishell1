@@ -12,6 +12,7 @@
         "history.h": "c",
         "ioctl.h": "c",
         "wait.h": "c",
-        "readline.h": "c"
+        "readline.h": "c",
+        "libft.h": "c"
     }
 }

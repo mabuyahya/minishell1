@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/22 15:08:07 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 12:57:56 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/22 15:50:57 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 17:07:00 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static void	to_executer(t_prompt *prom, t_list *cmd, char **args)
 	execute_command(prom, cmd, args);
 }
 
-int	handle_built_in(t_prompt *prom, t_list *cmd, int *exit_num, char **command)
 // execute command, and check if the command built in.
+int	handle_built_in(t_prompt *prom, t_list *cmd, int *exit_num, char **command)
 {
 	char	**str;
 	int		size;
@@ -31,15 +31,18 @@ int	handle_built_in(t_prompt *prom, t_list *cmd, int *exit_num, char **command)
 	{
 		str = ((t_node_content *)cmd->content)->full_cmd;
 		size = 0;
-		if (str)
-			size = ft_strlen(*str);
+		size = ft_strlen(*str);
 		if (str && !ft_strncmp(*str, "exit", size) && size == 4)
 			prom->exit_status = handle_exit(cmd, exit_num, prom);
-		else if (!cmd->next && prom->size == 1 && str && !ft_strncmp(*str, "cd", size) && size == 2)
+		else if (!cmd->next && prom->size == 1 && str
+			&& !ft_strncmp(*str, "cd", size) && size == 2)
 			prom->exit_status = handle_cd(prom, cmd, command);
-		else if (!cmd->next && str && prom->size == 1 && !ft_strncmp(*str, "export", size) && size == 6 && ft_matrixlen(str) > 1)
+		else if (!cmd->next && str && prom->size == 1
+			&& !ft_strncmp(*str, "export", size)
+			&& size == 6 && ft_matrixlen(str) > 1)
 			prom->exit_status = handle_export(prom, cmd, command);
-		else if (!cmd->next && prom->size == 1 && str && !ft_strncmp(*str, "unset", size) && size == 5)
+		else if (!cmd->next && prom->size == 1 && str
+			&& !ft_strncmp(*str, "unset", size) && size == 5)
 			prom->exit_status = handle_unset(prom, cmd, command);
 		else
 			to_executer(prom, cmd, command);
@@ -48,7 +51,7 @@ int	handle_built_in(t_prompt *prom, t_list *cmd, int *exit_num, char **command)
 	return (prom->exit_status);
 }
 
-static int check_back_slash(t_node_content *node)
+static int	check_back_slash(t_node_content *node)
 {
 	if ((node->full_cmd && ft_strchr(*node->full_cmd, '/'))
 		|| (node->full_path && ft_strchr(node->full_path, '/')))

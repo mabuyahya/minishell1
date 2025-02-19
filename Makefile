@@ -1,6 +1,6 @@
 # Shell and Compiler
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I include -I libft/include
+CFLAGS = -Wall -Wextra -Werror -I include -I libft/include
 
 # Utilities
 RM = rm -f
@@ -22,11 +22,11 @@ NAME = $(BIN)
 # Source Files
 SRC = builtins.c \
 	env.c \
-	error.c \
+	handle_errors.c \
 	execute.c \
 	expand_path.c \
 	expand_var.c \
-	fill_node_util.c \
+	creat_node_3.c \
 	split_separator.c \
 	delete_quotes.c \
 	get_cmd.c \

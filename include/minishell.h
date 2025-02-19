@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 13:06:30 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/02 17:22:54 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 16:54:00 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ typedef struct t_node_content
 {
 	char	**full_cmd;
 	char	*full_path;
-	int		infile;
-	int		outfile;
+	int		in;
+	int		out;
 }			t_node_content;
 
 typedef struct s_expand_var
@@ -114,11 +114,11 @@ char		*expand_variables(t_prompt *prom, char *line);
 
 char		**allocate_and_dup_args(char **args, t_prompt *prom);
 void		trim_args(char **temp, char **args, t_prompt *prom);
-t_node_content		*mini_init(void);
+t_node_content		*init_node_content(void);
 t_node_content		*get_params(t_node_content *node, char **str[2], int *i, t_prompt *prom);
 
-int			mini_pwd(void);
-int			mini_echo(t_list *cmd);
+int			handle_pwd(void);
+int			handle_echo(t_list *cmd);
 int			handle_cd(t_prompt *prompt, t_list *cmd, char **args);
 t_list		*stop_make_node(t_list *cmds, char **args, char **temp);
 
@@ -137,7 +137,7 @@ char		**ft_dup_matrix(char **m);
 char		**ft_extend_matrix(char **in, char *newstr);
 int			ft_matrixlen(char **m);
 void		ft_free_matrix(char ***m);
-int			ft_countchar(char *s, char c);
+int			ft_countchar(char *str, char c);
 int			handle_built_in(t_prompt *prompt, t_list *cmd, int *is_exit, char **args);
 int			check_if_built_in(t_node_content *n);
 void		check_cd(char **str[2], t_prompt *prom);
@@ -150,16 +150,16 @@ char		**split_separator(char const *s, char *set);
 char		*delete_qoutes(char const *s1, int squote, int dquote);
 t_list		*make_node(char **args, t_prompt *p);
 // int		get_fd(int oldfd, char *path, int flags[2]);
-t_node_content		*get_outfile1(t_node_content *node, char **args, int *i, t_prompt *prom);
-t_node_content		*out_redirction_double(t_node_content *node, char **args, int *i, t_prompt *prom);
-t_node_content		*get_infile1(t_node_content *node, char **args, int *i, t_prompt *prom);
-t_node_content		*get_infile2(t_node_content *node, char **args, int *i, t_prompt *prom);
+t_node_content		*out_redirction_single(t_node_content *node, char **command, int *i, t_prompt *prom);
+t_node_content		*out_redirction_double(t_node_content *node, char **command, int *i, t_prompt *prom);
+t_node_content	*in_redirection(t_node_content *node, char **command, int *i, t_prompt *promt);
+t_node_content	*herdoc(t_node_content *node, char **command, int *i, t_prompt *prom);
 void		execute_command(t_prompt *prompt, t_list *cmd, char **args);
 int			check_to_execute(t_prompt *prompt, t_list *cmd, int fd[2], char **args);
 void		get_cmd(t_prompt *prompt, t_list *start, char **split_path,
 				char *path);
 char		*expand_path(char *str, int i, int quotes[2], char *var);
-int			get_here_doc(char *str[2], char *aux[2], t_prompt *prom);
+int			handle_herdoc(char *str[2], char *aux[2], t_prompt *prom);
 void		*mini_perror(int err_type, char *param, int err, t_prompt *prom);
 char		*get_env_var(char *var, char **envp, int n, t_prompt *prom);
 char		**set_env_var(char *var, char *value, t_prompt *prom, int n);

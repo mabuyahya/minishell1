@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fill_node_util.c                                   :+:      :+:    :+:   */
+/*   creat_node_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 17:05:01 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 10:45:13 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:02:44 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_node_content	*mini_init(void)
+t_node_content	*init_node_content(void)
 {
-	t_node_content	*mini;
+	t_node_content	*cont;
 
-	mini = malloc(sizeof(t_node_content));
-	if (!mini)
+	cont = malloc(sizeof(t_node_content));
+	if (!cont)
 		return (NULL);
-	mini->full_cmd = NULL;
-	mini->full_path = NULL;
-	mini->infile = STDIN_FILENO;
-	mini->outfile = STDOUT_FILENO;
-	return (mini);
+	cont->full_cmd = NULL;
+	cont->full_path = NULL;
+	cont->in = 0;
+	cont->out = 1;
+	return (cont);
 }
 
 // put infile and outfile for every command.
@@ -37,12 +37,12 @@ t_node_content	*get_params(t_node_content *node, char **str[2], int *i, t_prompt
 		if (str[0][*i][0] == '>' && str[0][*i + 1] && str[0][*i + 1][0] == '>')
 			node = out_redirction_double(node, str[1], i, prom);
 		else if (str[0][*i][0] == '>')
-			node = get_outfile1(node, str[1], i, prom);
+			node = out_redirction_single(node, str[1], i, prom);
 		else if (str[0][*i][0] == '<' && str[0][*i + 1] && str[0][*i
 				+ 1][0] == '<')
-			node = get_infile2(node, str[1], i, prom);
+			node = herdoc(node, str[1], i, prom);
 		else if (str[0][*i][0] == '<')
-			node = get_infile1(node, str[1], i, prom);
+			node = in_redirection(node, str[1], i, prom);
 		else if (str[0][*i][0] != '|')
 			node->full_cmd = ft_extend_matrix(node->full_cmd, str[1][*i]);
 		else

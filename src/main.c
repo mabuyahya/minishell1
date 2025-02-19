@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 13:16:15 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:54:05 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 {
 	char	*sstr;
 
-	// (void)(argv);
 	str = getcwd(NULL, 0);
 	prom->envp = set_env_var("PWD", str, prom, 3);
 	free(str);
@@ -72,14 +71,19 @@ static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 	init_vars(prom, str, argv);
 }
 
+static void	check_tty()
+{
+	if (!isatty(0) || !isatty(1) || !isatty(2))
+		exit(1);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*read;
 	t_prompt	prom;
 
 	(void)(argv);
-	if (!isatty(0) || !isatty(1) || !isatty(2))
-		return (1);
+	check_tty();
 	init_prompt(&prom, argv, envp);
 	while (argc)
 	{

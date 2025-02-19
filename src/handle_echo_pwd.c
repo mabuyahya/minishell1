@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:15:34 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 19:16:21 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:42:01 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,57 @@
 
 extern int	g_e_status;
 
-int	mini_echo(t_list *cmd)
-// handle echo.
+static int	should_skip_newline(char *arg)
 {
-	int		newline;
-	int		i[2];
-	char	**argv;
-	t_node_content	*node;
-
-	i[0] = 0;
-	i[1] = 0;
-	newline = 1;
-	node = cmd->content;
-	argv = node->full_cmd;
-	while (argv && argv[++i[0]])
+	if (!ft_strncmp(arg, "-n", 2))
 	{
-		if (!i[1] && !ft_strncmp(argv[i[0]], "-n", 2)
-			&& (ft_countchar(argv[i[0]], 'n')
-				== (int)(ft_strlen(argv[i[0]]) - 1)))
-			newline = 0;
-		else
-		{
-			i[1] = 1;
-			ft_putstr_fd(argv[i[0]], 1);
-			if (argv[i[0] + 1])
-				ft_putchar_fd(' ', 1);
-		}
+		if (ft_countchar(arg, 'n') == (int)(ft_strlen(arg) - 1))
+			return (1);
 	}
-	return (write(1, "\n", newline) == 2);
+	return (0);
 }
 
-int	mini_pwd(void)
+static void	print_echo(char **command, int start)
+{
+	int i;
+
+	i = start;
+	while (command[i])
+	{
+		ft_putstr_fd(command[i], 1);
+		if (command[i + 1])
+			ft_putchar_fd(' ', 1);
+		i++;
+	}
+}
+
+int	handle_echo(t_list *cmd)
+// handle echooooooo
+{
+	int				flag_line;
+	int				i;
+	char			**command;
+	t_node_content	*node;
+
+	flag_line = 1;
+	node = cmd->content;
+	command = node->full_cmd;
+	i = 1;
+	while (command && command[i] && should_skip_newline(command[i]))
+	{
+		flag_line = 0;
+		i++;
+	}
+	print_echo(command, i);
+	
+	if (flag_line)
+		write(1, "\n", 1);
+	else
+		return (0);
+	return (1);
+}
+
+int	handle_pwd(void)
 // handle pwd.
 {
 	char	*buf;

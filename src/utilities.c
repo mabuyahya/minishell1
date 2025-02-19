@@ -6,24 +6,24 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:41:00 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/18 12:15:55 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:42:04 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_countchar(char *s, char c)
+int	ft_countchar(char *str, char c)
 {
 	int	count;
 
-	if (!s)
+	if (!str)
 		return (0);
 	count = 0;
-	while (*s)
+	while (*str)
 	{
-		if (*s == c)
+		if (*str == c)
 			count++;
-		s++;
+		str++;
 	}
 	return (count);
 }

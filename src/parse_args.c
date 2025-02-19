@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 13:22:20 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 14:54:31 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 extern int	g_e_status;
 
-static void	handle_fail_expand(t_prompt *prom, char **args, char **str)
+static void	handle_fail_expand(t_prompt *prom, char **command, char **str)
 {
 	ft_free_matrix(&prom->envp);
-	if (args && args[0])
-		ft_free_matrix(&args);
+	if (command && command[0])
+		ft_free_matrix(&command);
 	if (str && str[0])
 		ft_free_matrix(&str);
 	mini_perror(MEM, NULL, 1, prom);
@@ -50,21 +50,21 @@ static char	**expand(char **args, t_prompt *prom)
 	return (args);
 }
 
-static void	*parse_args(char **args, t_prompt *prom)
+static void	*parsing(char **command, t_prompt *prom)
 {
 	int		is_exit;
 	char	**temp;
 
 	is_exit = 0;
-	temp = expand(args, prom);
+	temp = expand(command, prom);
 	prom->cmds = make_node(temp, prom);
 	if (!prom->cmds)
 		return (prom);
 	prom->size = ft_lstsize(prom->cmds);
-	prom->exit_status = handle_built_in(prom, prom->cmds, &is_exit, args);
+	prom->exit_status = handle_built_in(prom, prom->cmds, &is_exit, command);
 	while (wait(NULL) != -1)
 		;
-	if (args && is_exit)
+	if (command && is_exit)
 	{
 		ft_lstclear(&prom->cmds, free_content);
 		return (NULL);
@@ -97,6 +97,8 @@ void	*check_args(char *read, t_prompt *prom)
 		printf("exit\n");
 		return (NULL);
 	}
+	if (!read[0])
+		return (read);
 	if (read[0] != '\0')
 		add_history(read);
 	read = expand_variables(prom, read);
@@ -107,7 +109,7 @@ void	*check_args(char *read, t_prompt *prom)
 		mini_perror(QUOTE, NULL, 1, prom);
 		return ("");
 	}
-	prom = parse_args(str, prom);
+	prom = parsing(str, prom);
 	check_args_util(prom, node);
 	return (prom);
 }

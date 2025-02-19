@@ -6,30 +6,30 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:09:14 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 10:47:02 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 16:03:07 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	fail_make_node(char ***temp, char **args, t_prompt *prom,
+static void	fail_make_node(char ***temp, char **command, t_prompt *prom,
 		t_list **cmds)
 {
 	ft_free_matrix(temp);
-	stop_make_node(cmds[0], prom->envp, args);
+	stop_make_node(cmds[0], prom->envp, command);
 	stop_make_node(cmds[1], NULL, NULL);
 	mini_perror(MEM, NULL, 1, prom);
 	exit(1);
 }
 
-static int	creat_node(char **args, int *i, t_list **cmds)
+static int	creat_node(char **command, int *i, t_list **cmds)
 {
 	t_node_content *mini;
 	t_list *lst;
 
-	if (args[*i][0] == '|' && (*i != 0))
+	if (command[*i][0] == '|' && (*i != 0))
 		(*i)++;
-	mini = mini_init();
+	mini = init_node_content();
 	if (!mini)
 		return (0);
 	lst = ft_lstnew(mini);
@@ -45,29 +45,31 @@ static int	creat_node(char **args, int *i, t_list **cmds)
 // cmd[0] = pointer to the first | cmd[1] = pointer to the last.
 // fill node, put the command inside the content of the node.
 // every command have the input and output and the path of the command.
-t_list	*make_node(char **args, t_prompt *prom)
+t_list	*make_node(char **command, t_prompt *prom)
 {
 	t_list		*cmds[2];
 	t_fill_node	fill;
 	
 	prom->count_make_node = -1;
-	init_make_node(cmds, &fill, args, prom);
-	while (args[++prom->count_make_node])
+	init_make_node(cmds, &fill, command, prom);
+	while (command[++prom->count_make_node])
 	{
 		make_node_util(cmds, &fill, &prom->count_make_node);
-		if (prom->count_make_node == 0 || (args[prom->count_make_node][0] == '|' && args[prom->count_make_node + 1] && args[prom->count_make_node + 1][0]))
+		if (prom->count_make_node == 0
+			|| (command[prom->count_make_node][0] == '|'
+			&& command[prom->count_make_node + 1] && command[prom->count_make_node + 1][0]))
 		{
-			if (!creat_node(args, &prom->count_make_node, cmds))
-				hanlde_make_node(cmds, args, prom, fill.temp);
+			if (!creat_node(command, &prom->count_make_node, cmds))
+				hanlde_make_node(cmds, command, prom, fill.temp);
 		}
-		make_node_util_2(args, &fill, cmds, prom);
+		make_node_util_2(command, &fill, cmds, prom);
 		if (!cmds[1]->content)
-			fail_make_node(fill.temp, args, prom, cmds);
+			fail_make_node(fill.temp, command, prom, cmds);
 		if (prom->count_make_node < 0)
-			return (stop_make_node(cmds[0], args, fill.temp[1]));
-		if (!args[prom->count_make_node])
+			return (stop_make_node(cmds[0], command, fill.temp[1]));
+		if (!command[prom->count_make_node])
 			break ;
 	}
-	stop_make_node(NULL, fill.temp[1], args);
+	stop_make_node(NULL, fill.temp[1], command);
 	return (cmds[0]);
 }
