@@ -1,102 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_cmd.c                                          :+:      :+:    :+:   */
+/*   grep_path_of_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 18:49:26 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 16:20:28 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/22 18:49:26 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 19:40:23 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
-// {
-// 	DIR		*dir;
-
-// 	dir = check_directory(cmd, s, path, prompt);
-// 	check_command_path(cmd, s, path, prompt);
-// 	return (dir);
-// }
-
-// static char	*find_command(char **env_path, char *cmd, char *full_path)
-// {
-// 	char	*temp;
-// 	int		i;
-
-// 	i = -1;
-// 	full_path = NULL;
-// 	while (env_path && env_path[++i])
-// 	{
-// 		free(full_path);
-// 		temp = ft_strjoin(env_path[i], "/");
-// 		if (!temp)
-// 			return (NULL);
-// 		full_path = ft_strjoin(temp, cmd);
-// 		free(temp);
-// 		if (!full_path)
-// 			return (NULL);
-// 		if (access(full_path, F_OK) == 0)
-// 			break ;
-// 	}
-// 	if (!env_path || !env_path[i])
-// 	{
-// 		free(full_path);
-// 		return (NULL);
-// 	}
-// 	return (full_path);
-// }
-
-// static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
-// {
-// 	t_node_content	*n;
-// 	DIR		*dir;
-
-// 	dir = NULL;
-// 	n = cmd->content;
-// 	if (n && n->full_cmd)
-// 		dir = opendir(*n->full_cmd);
-// 	if (n && n->full_cmd && ft_strchr(*n->full_cmd, '/') && !dir)
-// 	{
-// 		*s = ft_split(*n->full_cmd, '/');
-// 		n->full_path = ft_strdup(*n->full_cmd);
-// 		free(n->full_cmd[0]);
-// 		n->full_cmd[0] = ft_strdup(s[0][ft_matrixlen(*s) - 1]);
-// 	}
-// 	else if (!check_if_built_in(n) && n && n->full_cmd && !dir)
-// 	{
-// 		path = get_env_var("PATH", prompt->envp, 4, prompt);
-// 		*s = ft_split(path, ':');
-// 		free(path);
-// 		n->full_path = find_command(*s, *n->full_cmd, n->full_path);
-// 		if (!n->full_path || !n->full_cmd[0] || !n->full_cmd[0][0])
-// 			mini_perror(NCMD, *n->full_cmd, 127, prompt);
-// 	}
-// 	return (dir);
-// }
-
-// static void	stop_find_command(char **paths, t_node_content *n, t_prompt *prom)
-// {
-// 	ft_free_matrix(&prom->envp);
-// 	if (paths && paths[0])
-// 		ft_free_matrix(&paths);
-// 	free_content(n);
-// 	mini_perror(MEM, NULL, 1, prom);
-// 	exit(1);
-// }
-
-static void	stop_check_cmd(char *path, t_list *cmd, char ***s, t_prompt *prom)
-{
-	if (path)
-		free(path);
-	if (s)
-		ft_free_matrix(s);
-	stop_make_node(cmd, NULL, prom->envp);
-	mini_perror(MEM, NULL, 1, prom);
-	exit(1);
-}
 
 // find the file of the command in a PATH.
 static char	*find_command(char **env_path, char *cmd, char *full_path)
@@ -127,30 +41,37 @@ static char	*find_command(char **env_path, char *cmd, char *full_path)
 	return (full_path);
 }
 
-
-void	check_command_path(t_list *cmd, char ***s, char *path,
-		t_prompt *prom)
+void	check_command_path(t_list *cmd, char ***s, char *path, t_prompt *prom)
 {
 	t_node_content	*n;
+	DIR				*dir;
 
 	n = cmd->content;
-	if (!check_if_built_in(n) && n && n->full_cmd && !opendir(*n->full_cmd))
+	dir = NULL;
+	if (n->full_cmd)
+		dir = opendir(*n->full_cmd);
+	if (!check_if_built_in(n) && n && n->full_cmd && !dir)
 	{
 		path = get_env_var("PATH", prom->envp, 4, prom);
-		*s = ft_split(path, ':');
-		if (!*s)
-			stop_check_cmd(path, cmd, s, prom);
+		if (path)
+		{
+			*s = ft_split(path, ':');
+			if (!*s)
+				stop_check_cmd(path, cmd, s, prom);
+		}
 		free(path);
 		n->full_path = find_command(*s, *n->full_cmd, n->full_path);
 		if (!n->full_path || !n->full_cmd[0] || !n->full_cmd[0][0])
-			mini_perror(NCMD, *n->full_cmd, 127, prom);
+			mini_perror(NOT_CMD, *n->full_cmd, 127, prom);
 	}
+	if (dir)
+		closedir(dir);
 }
 
 DIR	*check_directory(t_list *cmd, char ***s, char *path, t_prompt *prom)
 {
 	t_node_content	*n;
-	DIR		*dir;
+	DIR				*dir;
 
 	dir = NULL;
 	n = cmd->content;
@@ -174,11 +95,11 @@ DIR	*check_directory(t_list *cmd, char ***s, char *path, t_prompt *prom)
 	return (dir);
 }
 
-
-static void	grep_path_of_cmd(t_prompt *prom, t_list *cmd, char **str, char *path)
+static void	grep_path_of_cmd(t_prompt *prom, t_list *cmd, char **str,
+		char *path)
 {
 	t_node_content	*node;
-	DIR		*dir;
+	DIR				*dir;
 
 	node = cmd->content;
 	dir = check_directory(cmd, &str, path, prom);
@@ -186,10 +107,10 @@ static void	grep_path_of_cmd(t_prompt *prom, t_list *cmd, char **str, char *path
 		mini_perror(IS_DIR, *node->full_cmd, 126, prom);
 	else if (!check_if_built_in(node) && node && node->full_path
 		&& access(node->full_path, F_OK) == -1)
-		mini_perror(NDIR, node->full_path, 127, prom);
+		mini_perror(ERR_NODIR, node->full_path, 127, prom);
 	else if (!check_if_built_in(node) && node && node->full_path
 		&& access(node->full_path, X_OK) == -1)
-		mini_perror(NPERM, node->full_path, 126, prom);
+		mini_perror(NO_PERM, node->full_path, 126, prom);
 	if (dir)
 		closedir(dir);
 	ft_free_matrix(&str);
@@ -203,7 +124,7 @@ void	execute_command(t_prompt *prom, t_list *cmd, char **command)
 	grep_path_of_cmd(prom, cmd, NULL, NULL);
 	if (pipe(pipes) == -1)
 	{
-		mini_perror(PIPERR, NULL, 1, prom);
+		mini_perror(PIPE_ERR, NULL, 1, prom);
 		return ;
 	}
 	if (!check_to_execute(prom, cmd, pipes, command))

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 17:15:34 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 16:42:01 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/21 17:15:34 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 17:58:30 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	should_skip_newline(char *arg)
 
 static void	print_echo(char **command, int start)
 {
-	int i;
+	int	i;
 
 	i = start;
 	while (command[i])
@@ -56,7 +56,6 @@ int	handle_echo(t_list *cmd)
 		i++;
 	}
 	print_echo(command, i);
-	
 	if (flag_line)
 		write(1, "\n", 1);
 	else

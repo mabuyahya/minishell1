@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 17:31:29 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 16:00:18 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/23 17:31:29 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	edit_env(t_prompt *prom, t_list *cmd, char **command, char *arg)
 		if (!prom->envp[i])
 		{
 			stop_make_node(cmd, command, prom->envp);
-			mini_perror(MEM, NULL, 1, prom);
+			mini_perror(ALLOC, NULL, 1, prom);
 			exit(1);
 		}
 	}
@@ -54,7 +54,7 @@ static void	edit_env(t_prompt *prom, t_list *cmd, char **command, char *arg)
 		if (!prom->envp)
 		{
 			stop_make_node(cmd, command, NULL);
-			mini_perror(MEM, NULL, 1, prom);
+			mini_perror(ALLOC, NULL, 1, prom);
 			exit(1);
 		}
 	}

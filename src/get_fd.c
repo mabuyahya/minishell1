@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_params.c                                       :+:      :+:    :+:   */
+/*   get_fd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/04 19:48:14 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 16:14:26 by sbibers          ###   ########.fr       */
+/*   Created: 2025/02/01 18:28:47 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:29:00 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ static int	get_fd(int prev_file, char *file_path, int flags[2], t_prompt *prom)
 	if (!file_path)
 		return (-1);
 	if (access(file_path, F_OK) == -1 && !flags[0])
-		mini_perror(NDIR, file_path, 127, prom);
+		mini_perror(ERR_NODIR, file_path, 127, prom);
 	else if (!flags[0] && access(file_path, R_OK) == -1)
-		mini_perror(NPERM, file_path, 126, prom);
-	else if (flags[0] && access(file_path, W_OK) == -1 && access(file_path, F_OK) == 0)
-		mini_perror(NPERM, file_path, 126, prom);
+		mini_perror(NO_PERM, file_path, 126, prom);
+	else if (flags[0] && access(file_path, W_OK) == -1
+		&& access(file_path, F_OK) == 0)
+		mini_perror(NO_PERM, file_path, 126, prom);
 	if (flags[0] && flags[1])
 		fd = open(file_path, O_CREAT | O_WRONLY | O_APPEND, 0666);
 	else if (flags[0] && !flags[1])
@@ -44,7 +45,8 @@ static int	get_fd(int prev_file, char *file_path, int flags[2], t_prompt *prom)
 }
 
 // >
-t_node_content	*out_redirction_single(t_node_content *node, char **command, int *i, t_prompt *prom)
+t_node_content	*out_redirction_single(t_node_content *node, char **command,
+int *i, t_prompt *prom)
 {
 	int		flags[2];
 
@@ -60,7 +62,8 @@ t_node_content	*out_redirction_single(t_node_content *node, char **command, int 
 			prom->exit_status = 1;
 		else
 		{
-			ft_putendl_fd("minishell: syntax error near unexpected token `newline'", 2);
+			ft_putstr_fd("minishell: syntax error", 2);
+			ft_putendl_fd(" near unexpected token `newline'", 2);
 			prom->exit_status = 2;
 		}
 	}
@@ -72,7 +75,8 @@ t_node_content	*out_redirction_single(t_node_content *node, char **command, int 
 // >>
 // flags[0] = 1 write, 0 read.
 // flags[1] = 1 append, 0 trunc.
-t_node_content	*out_redirction_double(t_node_content *node, char **command, int *i, t_prompt *prom)
+t_node_content	*out_redirction_double(t_node_content *node, char **command,
+int *i, t_prompt *prom)
 {
 	int		flags[2];
 
@@ -88,7 +92,8 @@ t_node_content	*out_redirction_double(t_node_content *node, char **command, int 
 			prom->exit_status = 1;
 		else
 		{
-			ft_putendl_fd("minishell: syntax error near unexpected token `newline'", 2);
+			ft_putstr_fd("minishell: syntax error", 2);
+			ft_putendl_fd(" near unexpected token `newline'", 2);
 			prom->exit_status = 2;
 		}
 	}
@@ -96,7 +101,8 @@ t_node_content	*out_redirction_double(t_node_content *node, char **command, int 
 }
 
 // for infile.
-t_node_content	*in_redirection(t_node_content *node, char **command, int *i, t_prompt *promt)
+t_node_content	*in_redirection(t_node_content *node,
+char **command, int *i, t_prompt *promt)
 {
 	int		flags[2];
 
@@ -112,7 +118,8 @@ t_node_content	*in_redirection(t_node_content *node, char **command, int *i, t_p
 			promt->exit_status = 1;
 		else
 		{
-			ft_putendl_fd("minishell: syntax error near unexpected token `newline'", 2);
+			ft_putstr_fd("minishell: syntax error", 2);
+			ft_putendl_fd(" near unexpected token `newline'", 2);
 			promt->exit_status = 2;
 		}
 	}
@@ -120,7 +127,8 @@ t_node_content	*in_redirection(t_node_content *node, char **command, int *i, t_p
 }
 
 // for heardoc.
-t_node_content	*herdoc(t_node_content *node, char **command, int *i, t_prompt *prom)
+t_node_content	*herdoc(t_node_content *node,
+char **command, int *i, t_prompt *prom)
 {
 	char	*temp[2];
 	char	*str[2];
@@ -140,7 +148,8 @@ t_node_content	*herdoc(t_node_content *node, char **command, int *i, t_prompt *p
 		*i = -1;
 		if (node->in != -1)
 		{
-			ft_putendl_fd("minishell: syntax error near unexpected token `newline'", 2);
+			ft_putstr_fd("minishell: syntax error", 2);
+			ft_putendl_fd(" near unexpected token `newline'", 2);
 			prom->exit_status = 2;
 		}
 	}

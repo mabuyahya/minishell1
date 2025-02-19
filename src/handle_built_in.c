@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   handle_built_in.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:50:57 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 17:07:00 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 19:46:31 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ static void	to_executer(t_prompt *prom, t_list *cmd, char **args)
 	execute_command(prom, cmd, args);
 }
 
+static void	count_and_check(char **str, int *size)
+{
+	if (str)
+		*size = ft_strlen(*str);
+}
+
 // execute command, and check if the command built in.
 int	handle_built_in(t_prompt *prom, t_list *cmd, int *exit_num, char **command)
 {
@@ -31,7 +37,7 @@ int	handle_built_in(t_prompt *prom, t_list *cmd, int *exit_num, char **command)
 	{
 		str = ((t_node_content *)cmd->content)->full_cmd;
 		size = 0;
-		size = ft_strlen(*str);
+		count_and_check(str, &size);
 		if (str && !ft_strncmp(*str, "exit", size) && size == 4)
 			prom->exit_status = handle_exit(cmd, exit_num, prom);
 		else if (!cmd->next && prom->size == 1 && str

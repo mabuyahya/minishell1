@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/09 10:17:00 by mbueno-g          #+#    #+#             */
-/*   Updated: 2025/02/19 14:45:54 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/29 17:59:26 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 19:33:07 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,14 @@
 
 extern int	g_e_status;
 
-void	change_sigint(int sig)
-{
-	(void)sig;
-	g_e_status = SIGINT;
-	close(STDIN_FILENO);
-
-}
-
-
-static int handle_herdoc_util(char *temp, char *str[2], t_prompt *prom)
+static int	handle_herdoc_util(char *temp, char *str[2], t_prompt *prom)
 {
 	temp = str[1];
 	str[1] = ft_strjoin(str[1], str[0]);
 	free(temp);
 	free(str[0]);
 	str[0] = readline("> ");
-	if(g_e_status == SIGINT)
+	if (g_e_status == SIGINT)
 	{
 		printf("\n");
 		prom->exit_status = 130;
@@ -40,7 +31,7 @@ static int handle_herdoc_util(char *temp, char *str[2], t_prompt *prom)
 	return (0);
 }
 
-static int handle_herdoc_util_2(char *temp, char *str[2], int messi)
+static int	handle_herdoc_util_2(char *temp, char *str[2], int messi)
 {
 	temp = str[0];
 	str[0] = ft_strjoin(str[0], "\n");
@@ -55,7 +46,7 @@ static int handle_herdoc_util_2(char *temp, char *str[2], int messi)
 	return (0);
 }
 
-static void handle_herdoc_util_3(char *str[2], int messi)
+static void	handle_herdoc_util_3(char *str[2], int messi)
 {
 	dup2(messi, STDIN_FILENO);
 	close(messi);
@@ -64,12 +55,11 @@ static void handle_herdoc_util_3(char *str[2], int messi)
 	rl_on_new_line();
 }
 
-
 char	*get_here_str(char *str[2], char *limit, char *warn, t_prompt *prom)
 {
 	char	*temp;
-	int 	messi;
-	size_t 	len;
+	int		messi;
+	size_t	len;
 
 	len = 0;
 	temp = NULL;
@@ -79,7 +69,7 @@ char	*get_here_str(char *str[2], char *limit, char *warn, t_prompt *prom)
 			|| ft_strlen(limit) != len))
 	{
 		if (handle_herdoc_util(temp, str, prom))
-			break;
+			break ;
 		if (!str[0])
 		{
 			printf("%s (wanted `%s\')\n", warn, limit);
@@ -98,11 +88,11 @@ int	handle_herdoc(char *str[2], char *temp[2], t_prompt *prom)
 {
 	int	pipes[2];
 
-	signal(SIGINT,SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	g_e_status = 0;
 	if (pipe(pipes) == -1)
 	{
-		mini_perror(PIPERR, NULL, 1, prom);
+		mini_perror(PIPE_ERR, NULL, 1, prom);
 		return (-1);
 	}
 	str[1] = get_here_str(str, temp[0], temp[1], prom);

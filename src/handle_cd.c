@@ -5,21 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 11:14:46 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 16:34:37 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/22 17:58:09 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int g_e_status;
+extern int	g_e_status;
 
 static void	stop_cd(t_list *cmd, t_prompt *prom, char **args, char ***str)
 {
-    if (str && str[0] && str[1])
-	    ft_free_matrix(str);
+	if (str && str[0] && str[1])
+		ft_free_matrix(str);
 	stop_make_node(cmd, args, prom->envp);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 
@@ -33,11 +33,11 @@ static void	get_cd_path(t_list *cmd, t_prompt *prom, char **command,
 	str[1] = ft_extend_matrix(str[1], temp);
 	free(temp);
 	if (!str[1])
-    {
-        ft_free_matrix(&str[0]);
+	{
+		ft_free_matrix(&str[0]);
 		stop_cd(cmd, prom, command, NULL);
-    }
-    check_cd(str, prom);
+	}
+	check_cd(str, prom);
 	if (!prom->exit_status)
 		prom->envp = set_env_var("OLDPWD", str[1][1], prom, 6);
 	temp = getcwd(NULL, 0);
@@ -68,19 +68,19 @@ int	handle_cd(t_prompt *prom, t_list *cmd, char **command)
 	{
 		temp = ft_strdup("");
 		if (!temp)
-        {
-            ft_free_matrix(&str[0]);
+		{
+			ft_free_matrix(&str[0]);
 			stop_cd(cmd, prom, command, NULL);
-	    }
-    }
+		}
+	}
 	str[1] = ft_extend_matrix(NULL, temp);
 	free(temp);
 	if (!str[1])
-    {
+	{
 		stop_cd(cmd, prom, command, NULL);
-        ft_free_matrix(&str[0]);
-    }
-    get_cd_path(cmd, prom, command, str);
+		ft_free_matrix(&str[0]);
+	}
+	get_cd_path(cmd, prom, command, str);
 	ft_free_matrix(&str[1]);
 	return (prom->exit_status);
 }

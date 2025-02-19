@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 17:29:06 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 16:00:32 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/19 17:59:13 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	handle_unset_2(int j, t_prompt *prom, char **args, t_list *cmd)
 	if (!ft_matrix_replace_in(&prom->envp, NULL, j))
 	{
 		stop_make_node(cmd, args, prom->envp);
-		mini_perror(MEM, NULL, 1, prom);
+		mini_perror(ALLOC, NULL, 1, prom);
 		exit(1);
 	}
 }
@@ -25,13 +25,13 @@ static void	handle_unset_2(int j, t_prompt *prom, char **args, t_list *cmd)
 static void	handle_unset_1(t_list *cmd, char **args, t_prompt *prom)
 {
 	stop_make_node(cmd, args, prom->envp);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 
 int	handle_unset(t_prompt *prom, t_list *cmd, char **args)
 {
-	t_unset var;
+	t_unset	var;
 
 	var.i = 0;
 	var.argv = ((t_node_content *)prom->cmds->content)->full_cmd;

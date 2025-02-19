@@ -5,14 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 14:56:33 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 14:56:34 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/10 14:56:33 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:28:16 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	update_quotes_malloc(const char *str, int *double_q, int *single_q, int *i)
+static void	update_quotes_malloc(const char *str, int *double_q, int *single_q,
+		int *i)
 {
 	if (!*double_q && str[*i] == '\'')
 		*single_q = !*single_q;
@@ -43,7 +44,8 @@ static int	malloc_len(char const *str)
 	return (count);
 }
 
-static void	update_quotes_trim(const char *str, int *double_q, int *single_q, int *i)
+static void	update_quotes_trim(const char *str, int *double_q, int *single_q,
+		int *i)
 {
 	if (!*double_q && str[i[0]] == '\'')
 		*single_q = !*single_q;

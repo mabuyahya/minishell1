@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 16:05:16 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 14:57:06 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/22 16:05:16 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ static char	**trim(char **args, t_prompt *prom)
 	return (temp);
 }
 
-void	hanlde_make_node(t_list **cmds, char **args, t_prompt *prom, char ***temp)
+void	hanlde_make_node(t_list **cmds, char **args, t_prompt *prom,
+		char ***temp)
 {
 	ft_free_matrix(temp);
 	stop_make_node(cmds[0], args, prom->envp);
 	stop_make_node(cmds[1], NULL, NULL);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 
@@ -37,13 +38,16 @@ void	make_node_util(t_list **cmds, t_fill_node *fill, int *i)
 	cmds[1] = ft_lstlast(cmds[0]);
 }
 
-void	make_node_util_2(char **args, t_fill_node *fill, t_list **cmds, t_prompt *prom)
+void	make_node_util_2(char **args, t_fill_node *fill, t_list **cmds,
+		t_prompt *prom)
 {
 	fill->temp[0] = args;
-	cmds[1]->content = get_params(cmds[1]->content, fill->temp, &prom->count_make_node, prom);
+	cmds[1]->content = put_content_2_node(cmds[1]->content, fill->temp,
+			&prom->count_make_node, prom);
 }
 
-void	init_make_node(t_list **cmds, t_fill_node *fill, char **args, t_prompt *prom)
+void	init_make_node(t_list **cmds, t_fill_node *fill, char **args,
+		t_prompt *prom)
 {
 	cmds[0] = NULL;
 	fill->temp[1] = trim(args, prom);

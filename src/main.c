@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 16:54:05 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/03 17:26:04 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:36:17 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 		sstr = ft_itoa(ft_atoi(str) + 1);
 	free(str);
 	if (!sstr)
-		fail_allocate(prom, MEM);
+		fail_allocate(prom, ALLOC);
 	prom->envp = set_env_var("SHLVL", sstr, prom, 5);
 	free(sstr);
 	str = get_env_var("PATH", prom->envp, 4, prom);
@@ -64,14 +64,14 @@ static void	init_prompt(t_prompt *prom, char **argv, char **envp)
 	prom->envp = ft_dup_matrix(envp);
 	if (!prom->envp)
 	{
-		mini_perror(MEM, NULL, 1, prom);
+		mini_perror(ALLOC, NULL, 1, prom);
 		exit(1);
 	}
 	prom->exit_status = 0;
 	init_vars(prom, str, argv);
 }
 
-static void	check_tty()
+static void	check_tty(void)
 {
 	if (!isatty(0) || !isatty(1) || !isatty(2))
 		exit(1);

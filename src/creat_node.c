@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 17:09:14 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 16:03:07 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/22 17:09:14 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ static void	fail_make_node(char ***temp, char **command, t_prompt *prom,
 	ft_free_matrix(temp);
 	stop_make_node(cmds[0], prom->envp, command);
 	stop_make_node(cmds[1], NULL, NULL);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 
 static int	creat_node(char **command, int *i, t_list **cmds)
 {
-	t_node_content *mini;
-	t_list *lst;
+	t_node_content	*mini;
+	t_list			*lst;
 
 	if (command[*i][0] == '|' && (*i != 0))
 		(*i)++;
@@ -49,7 +49,7 @@ t_list	*make_node(char **command, t_prompt *prom)
 {
 	t_list		*cmds[2];
 	t_fill_node	fill;
-	
+
 	prom->count_make_node = -1;
 	init_make_node(cmds, &fill, command, prom);
 	while (command[++prom->count_make_node])
@@ -57,11 +57,10 @@ t_list	*make_node(char **command, t_prompt *prom)
 		make_node_util(cmds, &fill, &prom->count_make_node);
 		if (prom->count_make_node == 0
 			|| (command[prom->count_make_node][0] == '|'
-			&& command[prom->count_make_node + 1] && command[prom->count_make_node + 1][0]))
-		{
+			&& command[prom->count_make_node + 1]
+			&& command[prom->count_make_node + 1][0]))
 			if (!creat_node(command, &prom->count_make_node, cmds))
 				hanlde_make_node(cmds, command, prom, fill.temp);
-		}
 		make_node_util_2(command, &fill, cmds, prom);
 		if (!cmds[1]->content)
 			fail_make_node(fill.temp, command, prom, cmds);

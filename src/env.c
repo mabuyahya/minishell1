@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 13:44:41 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/22 11:41:03 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 19:19:34 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ extern int		g_e_status;
 static void	stop_get(char **envp, t_prompt *prom)
 {
 	ft_free_matrix(&envp);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 
@@ -57,7 +57,7 @@ static void	stop_set(char *value, char **envp, char *new_entry, t_prompt *prom)
 		free(value);
 	if (new_entry)
 		free(new_entry);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 

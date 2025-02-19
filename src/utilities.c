@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:41:00 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/19 16:42:04 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 18:38:34 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,16 @@ int	is_numeric(char *str)
 		i++;
 	}
 	return (1);
+}
+
+int	ft_check_space(char *read)
+{
+	int	i;
+
+	i = 0;
+	while (read[i] && read[i] == ' ')
+		i++;
+	if (read[i] != '\0')
+		return (1);
+	return (0);
 }

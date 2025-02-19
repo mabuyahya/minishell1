@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 12:49:57 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 12:50:15 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/04 18:00:07 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:09:31 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,11 @@ void	handle_sigint(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
+}
+
+void	change_sigint(int sig)
+{
+	(void)sig;
+	g_e_status = SIGINT;
+	close(STDIN_FILENO);
 }

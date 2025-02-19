@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_args.c                                       :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 14:54:31 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/09 17:59:46 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:40:11 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	handle_fail_expand(t_prompt *prom, char **command, char **str)
 		ft_free_matrix(&command);
 	if (str && str[0])
 		ft_free_matrix(&str);
-	mini_perror(MEM, NULL, 1, prom);
+	mini_perror(ALLOC, NULL, 1, prom);
 	exit(1);
 }
 
@@ -88,7 +88,7 @@ void	check_args_util(t_prompt *prom, t_node_content *node)
 // all solution.
 void	*check_args(char *read, t_prompt *prom)
 {
-	char	**str;
+	char			**str;
 	t_node_content	*node;
 
 	node = NULL;
@@ -97,7 +97,7 @@ void	*check_args(char *read, t_prompt *prom)
 		printf("exit\n");
 		return (NULL);
 	}
-	if (!read[0])
+	if (!read[0] || !ft_check_space(read))
 		return (read);
 	if (read[0] != '\0')
 		add_history(read);
@@ -106,7 +106,7 @@ void	*check_args(char *read, t_prompt *prom)
 	free(read);
 	if (!str)
 	{
-		mini_perror(QUOTE, NULL, 1, prom);
+		mini_perror(ERR_QUO, NULL, 1, prom);
 		return ("");
 	}
 	prom = parsing(str, prom);

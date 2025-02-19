@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/27 18:23:56 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/17 12:52:23 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/07 17:34:17 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:13:16 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void update_quotes_count(char *str, int *quotes, int *j)
+static void	update_quotes_count(char *str, int *quotes, int *j)
 {
 	if (str[*j] == '\'' && !quotes[1])
 		quotes[0] = !quotes[0];
@@ -31,7 +31,8 @@ static int	count_words(char *str, char *set, int count, int *j)
 		count++;
 		if (!ft_strchr(set, str[*j]))
 		{
-			while ((!ft_strchr(set, str[*j]) || quotes[0] || quotes[1]) && str[*j] != '\0')
+			while ((!ft_strchr(set, str[*j]) || quotes[0]
+					|| quotes[1]) && str[*j] != '\0')
 			{
 				update_quotes_count(str, quotes, j);
 				(*j)++;
@@ -64,7 +65,7 @@ static char	**split_separator_util(char **args, char *str, char *sep, int i[3])
 		i[1] = i[0];
 		if (!ft_strchr(sep, str[i[0]]))
 		{
-			while (str[i[0]] && (!ft_strchr(sep, str[i[0]]) || quotes[0] || quotes[1]))
+			while (if_split_separator_util(str, sep, i, quotes))
 			{
 				update_quotes_fill(str, i, quotes);
 				i[0]++;

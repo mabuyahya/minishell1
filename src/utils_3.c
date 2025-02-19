@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salam <salam@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 19:17:25 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/16 05:35:02 by salam            ###   ########.fr       */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,23 @@ char	*ft_strndup(const char *s, int n)
 	}
 	*d = '\0';
 	return (dup);
+}
+
+int	if_split_separator_util(char *str,
+char *sep, int i[3], int quotes[2])
+{
+	if (str[i[0]] && (!ft_strchr(sep, str[i[0]]) || quotes[0] || quotes[1]))
+		return (1);
+	return (0);
+}	
+
+void	stop_check_cmd(char *path, t_list *cmd, char ***s, t_prompt *prom)
+{
+	if (path)
+		free(path);
+	if (s)
+		ft_free_matrix(s);
+	stop_make_node(cmd, NULL, prom->envp);
+	mini_perror(ALLOC, NULL, 1, prom);
+	exit(1);
 }

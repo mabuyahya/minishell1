@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/28 15:28:36 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/19 14:53:55 by sbibers          ###   ########.fr       */
+/*   Created: 2025/01/12 17:58:58 by sbibers           #+#    #+#             */
+/*   Updated: 2025/02/19 18:24:35 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	ft_count_words(const char *str, char *seo)
 static void	handle_allocation_failure(char **array, t_prompt *prom)
 {
 	ft_free_matrix(&array);
-	fail_allocate(prom, MEM);
+	fail_allocate(prom, ALLOC);
 }
 
 static void	update_quotes(char *str, int *i, char *quote)
@@ -101,7 +101,7 @@ char	**split_quote_space(char *str, char *sep, t_prompt *prom)
 	if (!array)
 	{
 		free(str);
-		fail_allocate(prom, MEM);
+		fail_allocate(prom, ALLOC);
 		exit(1);
 	}
 	array = make_command(array, str, sep, prom);
