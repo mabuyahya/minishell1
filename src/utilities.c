@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:41:00 by mabuyahy          #+#    #+#             */
-/*   Updated: 2025/02/19 18:38:34 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 20:00:58 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,10 @@ int	ft_check_space(char *read)
 	if (read[i] != '\0')
 		return (1);
 	return (0);
+}
+
+void	*handle_exit_null(void)
+{
+	printf("exit\n");
+	return (NULL);
 }

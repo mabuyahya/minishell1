@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 18:38:51 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 20:00:56 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ enum			e_mini_error
 };
 
 // what the hell
+void			*handle_exit_null(void);
 char			*ft_strndup(const char *s, int n);
 char			*ft_strncpy(char *dest, const char *src, int n);
 char			*ft_strcat(char *dest, const char *src);

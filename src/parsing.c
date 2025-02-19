@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 17:59:46 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/19 18:40:11 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 20:00:41 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,12 @@ void	*check_args(char *read, t_prompt *prom)
 
 	node = NULL;
 	if (!read)
-	{
-		printf("exit\n");
-		return (NULL);
-	}
+		return (handle_exit_null());
 	if (!read[0] || !ft_check_space(read))
-		return (read);
+	{
+		free(read);
+		return ("");
+	}
 	if (read[0] != '\0')
 		add_history(read);
 	read = expand_variables(prom, read);

@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I include -I libft/include
+CFLAGS = -Wall -Wextra -Werror -I include -I libft/include
 
 RM = rm -f
 AR = ar rcs
