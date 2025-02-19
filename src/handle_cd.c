@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 11:14:46 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 20:38:20 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 10:35:21 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	get_cd_path(t_list *cmd, t_prompt *prom, char **args,
     }
     check_cd(str, prom);
 	if (!prom->exit_status)
-		prom->envp = mini_setenv("OLDPWD", str[1][1], prom, 6);
+		prom->envp = set_env_var("OLDPWD", str[1][1], prom, 6);
 	temp = getcwd(NULL, 0);
 	if (!temp)
 	{
@@ -51,7 +51,7 @@ static void	get_cd_path(t_list *cmd, t_prompt *prom, char **args,
 	free(temp);
 	if (!str[1])
 		stop_cd(cmd, prom, args, str);
-	prom->envp = mini_setenv("PWD", str[1][2], prom, 3);
+	prom->envp = set_env_var("PWD", str[1][2], prom, 3);
 }
 
 // handle command cd.
@@ -63,7 +63,7 @@ int	handle_cd(t_prompt *prom, t_list *cmd, char **args)
 
 	prom->exit_status = 0;
 	str[0] = ((t_node_content *)prom->cmds->content)->full_cmd;
-	temp = mini_getenv("HOME", prom->envp, 4, prom);
+	temp = get_env_var("HOME", prom->envp, 4, prom);
 	if (!temp)
 	{
 		temp = ft_strdup("");

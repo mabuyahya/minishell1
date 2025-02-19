@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:49:26 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 20:41:47 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 10:35:13 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static DIR	*cmd_checks(t_prompt *prompt, t_list *cmd, char ***s, char *path)
 	}
 	else if (!check_if_built_in(n) && n && n->full_cmd && !dir)
 	{
-		path = mini_getenv("PATH", prompt->envp, 4, prompt);
+		path = get_env_var("PATH", prompt->envp, 4, prompt);
 		*s = ft_split(path, ':');
 		free(path);
 		n->full_path = find_command(*s, *n->full_cmd, n->full_path);

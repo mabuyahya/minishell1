@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 16:51:42 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 20:24:38 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 12:45:15 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*expand_variable(char *line, char *key_start, t_prompt *prom)
 	var.key = ft_strndup(key_start, var.len);
 	if (!var.key)
 		return (line);
-	var.env_value = mini_getenv(var.key, prom->envp, -1, prom);
+	var.env_value = get_env_var(var.key, prom->envp, -1, prom);
 	free(var.key);
 	if (!var.env_value)
 		var.env_value = ft_strdup("");

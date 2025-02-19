@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 17:22:54 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 21:14:25 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 13:06:30 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_prompt
 	char	**envp;
 	int		size;
 	int		exit_status;
+	int		count_make_node;
+	int		flag;
 }			t_prompt;
 
 typedef struct t_node_content
@@ -146,7 +148,7 @@ void		*check_args(char *out, t_prompt *p);
 char		**split_quote_space(char *str, char *set, t_prompt *p);
 char		**split_separator(char const *s, char *set);
 char		*delete_qoutes(char const *s1, int squote, int dquote);
-t_list		*make_node(char **args, int i, t_prompt *p);
+t_list		*make_node(char **args, t_prompt *p);
 // int		get_fd(int oldfd, char *path, int flags[2]);
 t_node_content		*get_outfile1(t_node_content *node, char **args, int *i, t_prompt *prom);
 t_node_content		*out_redirction_double(t_node_content *node, char **args, int *i, t_prompt *prom);
@@ -159,14 +161,14 @@ void		get_cmd(t_prompt *prompt, t_list *start, char **split_path,
 char		*expand_path(char *str, int i, int quotes[2], char *var);
 int			get_here_doc(char *str[2], char *aux[2], t_prompt *prom);
 void		*mini_perror(int err_type, char *param, int err, t_prompt *prom);
-char		*mini_getenv(char *var, char **envp, int n, t_prompt *prom);
-char		**mini_setenv(char *var, char *value, t_prompt *prom, int n);
+char		*get_env_var(char *var, char **envp, int n, t_prompt *prom);
+char		**set_env_var(char *var, char *value, t_prompt *prom, int n);
 // char	*mini_getprompt(t_prompt prompt);
 void		free_content(void *content);
 void		handle_sigint(int sig);
 void		hanlde_make_node(t_list **cmds, char **args, t_prompt *prom, char ***temp);
 void		make_node_util(t_list **cmds, t_fill_node *fill, int *i);
-void		make_node_util_2(char **args, t_fill_node *fill, t_list **cmds, int *i, t_prompt *prom);
+void		make_node_util_2(char **args, t_fill_node *fill, t_list **cmds, t_prompt *prom);
 void		init_make_node(t_list **cmds, t_fill_node *fill, char **args, t_prompt *prom);
 
 #endif

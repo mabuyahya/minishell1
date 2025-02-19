@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 13:40:47 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/18 21:30:52 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 13:16:15 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 {
 	char	*sstr;
 
-	(void)(argv);
+	// (void)(argv);
 	str = getcwd(NULL, 0);
-	prom->envp = mini_setenv("PWD", str, prom, 3);
+	prom->envp = set_env_var("PWD", str, prom, 3);
 	free(str);
-	str = mini_getenv("SHLVL", prom->envp, 5, prom);
+	str = get_env_var("SHLVL", prom->envp, 5, prom);
 	if (!str || ft_atoi(str) <= 0)
 		sstr = ft_strdup("1");
 	else
@@ -39,17 +39,17 @@ static void	init_vars(t_prompt *prom, char *str, char **argv)
 	free(str);
 	if (!sstr)
 		fail_allocate(prom, MEM);
-	prom->envp = mini_setenv("SHLVL", sstr, prom, 5);
+	prom->envp = set_env_var("SHLVL", sstr, prom, 5);
 	free(sstr);
-	str = mini_getenv("PATH", prom->envp, 4, prom);
+	str = get_env_var("PATH", prom->envp, 4, prom);
 	if (!str)
-		prom->envp = mini_setenv("PATH",
+		prom->envp = set_env_var("PATH",
 				"/usr/local/sbin:/usr/local/bin:/usr/bin:/bin",
 				prom, 4);
 	free(str);
-	str = mini_getenv("_", prom->envp, 1, prom);
+	str = get_env_var("_", prom->envp, 1, prom);
 	if (!str)
-		prom->envp = mini_setenv("_", argv[0], prom, 1);
+		prom->envp = set_env_var("_", argv[0], prom, 1);
 	free(str);
 }
 
@@ -83,6 +83,7 @@ int	main(int argc, char **argv, char **envp)
 	init_prompt(&prom, argv, envp);
 	while (argc)
 	{
+		prom.flag = 0;
 		g_e_status = 0;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);

@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 17:02:44 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 20:24:43 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 10:35:13 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	check_command_path(t_list *cmd, char ***s, char *path,
 	n = cmd->content;
 	if (!check_if_built_in(n) && n && n->full_cmd && !opendir(*n->full_cmd))
 	{
-		path = mini_getenv("PATH", prom->envp, 4, prom);
+		path = get_env_var("PATH", prom->envp, 4, prom);
 		*s = ft_split(path, ':');
 		if (!*s)
 			stop_check_cmd(path, cmd, s, prom);

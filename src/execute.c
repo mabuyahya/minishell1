@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 18:49:29 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/18 20:43:10 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 13:17:01 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 
 extern int	g_e_status;
 
-static void put_export(char **m, int fd)
+static void put_export(char **str, int fd)
 {
 	int	i;
 	
 	i = 0;
-	while (m && m[i])
+	while (str && str[i])
 	{
-		ft_putstr_fd(m[i], fd);
+		ft_putstr_fd("export : ", fd);
+		ft_putstr_fd(str[i], fd);
 		ft_putstr_fd("\n", fd);
 		i++;
 	}
@@ -54,6 +55,8 @@ void	execve_the_command(t_prompt *prompt, t_node_content *node, t_list *cmd, cha
 {
 	size_t	size;
 
+	if (prompt->flag == 1)
+		return;
 	if (node->full_cmd)
 		size = ft_strlen(*node->full_cmd);
 	signal(SIGINT, SIG_DFL);
@@ -144,7 +147,8 @@ int 	check_to_execute(t_prompt *prompt, t_list *cmd, int pipes[2], char **args)
 		|| check_if_built_in(node))
 	{
 		executer(prompt, cmd, pipes, args);
-		prompt->exit_status = 0;
+		if (prompt->exit_status == 130 && prompt->flag == 0)
+			prompt->exit_status = 0;
 	}
 	else if (!check_if_built_in(node) && ((node->full_path
 		&& !access(node->full_path, F_OK)) || directory))

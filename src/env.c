@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:41:03 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 20:36:26 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 12:44:54 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	stop_get(char **envp, t_prompt *prom)
 	exit(1);
 }
 
-char	*mini_getenv(char *var, char **envp, int n, t_prompt *prom)
+char	*get_env_var(char *var, char **envp, int n, t_prompt *prom)
 {
 	int		i;
 	int		n2;
@@ -75,7 +75,7 @@ static char	**set_env_util(t_set_env *set_env, char **envp, char *var)
 }
 
 // add to env if not exist, if exist edit it.
-char	**mini_setenv(char *var, char *value, t_prompt *prom, int n)
+char	**set_env_var(char *var, char *value, t_prompt *prom, int n)
 {
 	t_set_env	set_env;
 
@@ -85,11 +85,9 @@ char	**mini_setenv(char *var, char *value, t_prompt *prom, int n)
 	if (!set_env.add_equal)
 		stop_set(value, prom->envp, NULL, prom);
 	set_env.new_entry = ft_strjoin(set_env.add_equal, value);
-	if (!set_env.new_entry)
-		stop_set(value, prom->envp, set_env.add_equal, prom);
 	free(set_env.add_equal);
 	if (!set_env.new_entry)
-		return (prom->envp);
+		stop_set(value, prom->envp, NULL, prom);
 	set_env.i = 0;
 	while (prom->envp && prom->envp[set_env.i])
 	{

@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 12:08:12 by aperez-b          #+#    #+#             */
-/*   Updated: 2025/02/18 20:37:16 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 13:22:20 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	**expand(char **args, t_prompt *prom)
 	i = -1;
 	while (args && args[++i])
 	{
-		args[i] = expand_path(args[i], -1, quotes, mini_getenv("HOME",
+		args[i] = expand_path(args[i], -1, quotes, get_env_var("HOME",
 					prom->envp, 4, prom));
 		if (!args[i])
 			handle_fail_expand(prom, args, str);
@@ -57,7 +57,7 @@ static void	*parse_args(char **args, t_prompt *prom)
 
 	is_exit = 0;
 	temp = expand(args, prom);
-	prom->cmds = make_node(temp, -1, prom);
+	prom->cmds = make_node(temp, prom);
 	if (!prom->cmds)
 		return (prom);
 	prom->size = ft_lstsize(prom->cmds);
@@ -78,7 +78,7 @@ void	check_args_util(t_prompt *prom, t_node_content *node)
 		node = prom->cmds->content;
 	if (prom && prom->cmds && node && node->full_cmd
 		&& ft_lstsize(prom->cmds) == 1)
-		prom->envp = mini_setenv("_",
+		prom->envp = set_env_var("_",
 				node->full_cmd[ft_matrixlen(node->full_cmd) - 1], prom,
 				1);
 	if (prom && prom->cmds)

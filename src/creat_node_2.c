@@ -6,7 +6,7 @@
 /*   By: sbibers <sbibers@student.42amman.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 16:05:16 by sbibers           #+#    #+#             */
-/*   Updated: 2025/02/18 20:52:22 by sbibers          ###   ########.fr       */
+/*   Updated: 2025/02/19 10:46:12 by sbibers          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ void	make_node_util(t_list **cmds, t_fill_node *fill, int *i)
 	cmds[1] = ft_lstlast(cmds[0]);
 }
 
-void	make_node_util_2(char **args, t_fill_node *fill, t_list **cmds, int *i, t_prompt *prom)
+void	make_node_util_2(char **args, t_fill_node *fill, t_list **cmds, t_prompt *prom)
 {
 	fill->temp[0] = args;
-	cmds[1]->content = get_params(cmds[1]->content, fill->temp, i, prom);
+	cmds[1]->content = get_params(cmds[1]->content, fill->temp, &prom->count_make_node, prom);
 }
 
 void	init_make_node(t_list **cmds, t_fill_node *fill, char **args, t_prompt *prom)
